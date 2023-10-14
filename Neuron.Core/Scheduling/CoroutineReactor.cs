@@ -15,7 +15,6 @@ namespace Neuron.Core.Scheduling;
 /// </summary>
 public abstract class CoroutineReactor
 {
-    [Inject]
     public ILogger Logger { get; set; }
         
     private List<CoroutineRegistration> _coroutines = new();
