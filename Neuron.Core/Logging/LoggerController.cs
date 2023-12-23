@@ -51,6 +51,12 @@ public class LoggerController
     /// </summary>
     public ILogger GetLogger(Type type)
         => new DelegateLogger(this, type.Name);
+
+    /// <summary>
+    /// Gets a new child logger.
+    /// </summary>
+    public ILogger GetLogger(string caller)
+        => new DelegateLogger(this, caller);
 }
 
 public class DelegateLogger : LoggerBase

@@ -3,31 +3,43 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using Neuron.Core;
 using Neuron.Core.Logging;
 using Neuron.Modules.Commands.Event;
 using Ninject;
 
 namespace Neuron.Modules.Commands.Command;
 
-/// <summary>
-/// Handle commands in the following manner, any command register which has the name or alias
-/// of the command being executed will be executed.
-/// </summary>
-public class CommandHandler : ICommandHandler
+public class CachedCommandHandler : ICommandHandler
 {
     private IKernel _kernel;
     private NeuronLogger _neuronLogger;
     private ILogger _logger;
 
-    public CommandHandler(IKernel kernel, NeuronLogger neuronLogger)
+    public readonly bool overrideName;
+
+    /// <param name="overrideName">
+    /// if <see langword="true"/> a register command with a same name than a other other command allready register
+    /// will replace the last register. 
+    /// <br>else a <see cref="SCPSunrise.Excepetion.ModuleOrPluginConflicException"/> get throw </br> 
+    /// </param>
+    public CachedCommandHandler(IKernel kernel, NeuronLogger neuronLogger, bool overrideName = false)
     {
         _kernel = kernel;
         _neuronLogger = neuronLogger;
         _logger = _neuronLogger.GetLogger<CommandHandler>();
+        this.overrideName = overrideName;
     }
 
     private List<ICommand> _commands = new();
     public ReadOnlyCollection<ICommand> Commands => _commands.AsReadOnly();
+
+    private Dictionary<string, ICommand> _nameToCommands  = new();
+    public ReadOnlyDictionary<string, ICommand> NameToCommands => new ReadOnlyDictionary<string, ICommand>(_nameToCommands);
+
+    private Dictionary<string, ICommand> _aliasToCommands  = new();
+    public ReadOnlyDictionary<string, ICommand> AliasToCommands => new ReadOnlyDictionary<string, ICommand>(_aliasToCommands);
+
 
     public void Raise(CommandEvent commandEvent)
     {
@@ -57,6 +69,7 @@ public class CommandHandler : ICommandHandler
 
                 commandEvent.Result = handled;
                 commandEvent.IsHandled = true;
+                break;
             }
         }
     }
@@ -68,8 +81,18 @@ public class CommandHandler : ICommandHandler
     {
         if (meta == null) return;
         if (!typeof(ICommand).IsAssignableFrom(type)) return;
+
+        if (!overrideName && _nameToCommands.ContainsKey(meta.CommandName))
+            throw ModuleOrPluginConflicException.Build(_nameToCommands[meta.CommandName].GetType(), type,
+                "it is not possible to register two commands with the same name");
+
         var command = (ICommand)_kernel.Get(type);
         command.Meta = meta;
+
+        _nameToCommands[meta.CommandName] = command;
+
+        foreach (var alias in meta.Aliases)
+            _aliasToCommands[alias] = command;
         _commands.Add(command);
     }
 
@@ -82,6 +105,15 @@ public class CommandHandler : ICommandHandler
     {
         if (meta == null) return;
         command.Meta = meta;
+
+        if (!overrideName && _nameToCommands.ContainsKey(meta.CommandName))
+            throw ModuleOrPluginConflicException.Build(_nameToCommands[meta.CommandName], command,
+                "it is not possible to register two commands with the same name");
+
+        _nameToCommands[meta.CommandName] = command;
+
+        foreach (var alias in meta.Aliases)
+            _aliasToCommands[alias] = command;
         _commands.Add(command);
     }
 

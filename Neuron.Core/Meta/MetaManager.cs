@@ -46,18 +46,14 @@ public class MetaManager
     /// Generates bindings for specified types using the <see cref="MetaGenerateBindings"/> event.
     /// Bindings are intermediate data-holders which are later used by the framework or modules,
     /// and are publicly available if related with an module. Can be retrieved via <see cref="Modules.ModuleManager"/>
-    /// as a property of <see cref="Modules.ModuleLoadContext"/>.
+    /// as a property of <see cref="Modules.ModuleContext"/>.
     /// </summary>
     public List<IMetaBinding> GenerateBindings(List<MetaType> types)
     {
         var list = new List<IMetaBinding>();
         foreach (var type in types)
         {
-            MetaGenerateBindings.Raise(new MetaGenerateBindingsEvent
-            {
-                MetaType = type,
-                Outputs = list
-            });
+            MetaGenerateBindings.Raise(new MetaGenerateBindingsEvent(type, list));
             _logger.Debug("* [FullName] has been processed", type.Type.FullName);
         }
 
@@ -115,6 +111,12 @@ public class MetaLoadedEvent : IEvent
 
 public class MetaGenerateBindingsEvent : IEvent
 {
+    public MetaGenerateBindingsEvent(MetaType metaType, List<IMetaBinding> outputs) 
+    {
+        MetaType = metaType;
+        Outputs = outputs;
+    }
+
     public MetaType MetaType { get; internal set; }
     public List<IMetaBinding> Outputs { get; internal set; }
 }

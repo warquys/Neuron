@@ -70,7 +70,7 @@ public abstract class CoroutineReactor
                     DiagnosticsError.Description($"The coroutine '{pair.Enumerator}' threw {e.GetType().FullName}: {e.Message}")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 Logger?.Framework(error);
             }
         }

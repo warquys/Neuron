@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Neuron.Core.Logging;
 using Neuron.Core.Meta;
 
 namespace Neuron.Core.Events;
@@ -11,7 +12,7 @@ namespace Neuron.Core.Events;
 /// Event subscribers should manipulate the properties of the event they receive to alter data.
 /// </summary>
 /// <typeparam name="T">type of the event</typeparam>
-public class EventReactor<T>: IEventReactor where T: IEvent
+public class EventReactor<T> : IEventReactor where T : IEvent
 {
 
     private readonly List<HandlerRegistration<T>> _registrations = new();
@@ -37,7 +38,7 @@ public class EventReactor<T>: IEventReactor where T: IEvent
     /// Subscribes a delegate to the backing event.
     /// </summary>
     /// <param name="handler">the delegate to subscribe</param>
-    /// <param name="priority">the priority of the subscription</param>
+    /// <param name="priority">the priority of the subscription, the lower take the event first.</param>
     public void Subscribe(EventHandler<T> handler, int priority = 0)
     {
         lock (this)
@@ -81,7 +82,7 @@ public class EventReactor<T>: IEventReactor where T: IEvent
     /// </summary>
     /// <param name="obj">the instance of object which method shall be hooked</param>
     /// <param name="info">the method which shall be hooked</param>
-    /// <param name="priority">the priority, the highest priority takes the event first</param>
+    /// <param name="priority">the priority, the lower priority takes the event first</param>
     public object SubscribeUnsafe(object obj, MethodInfo info, int priority = 0)
     {
         var handler = DelegateUtils.CreateDelegate<EventHandler<T>>(obj, info);
@@ -116,7 +117,7 @@ internal class DelegateUtils
     }
 }
 
-public struct HandlerRegistration<T> where T: IEvent
+public struct HandlerRegistration<T> where T : IEvent
 {
     public int Priority { get; }
     public EventHandler<T> Handler { get; }
@@ -132,7 +133,7 @@ public class HandlerRegistrationComparer<T> : IComparer<HandlerRegistration<T>> 
 {
     public int Compare(HandlerRegistration<T> x, HandlerRegistration<T> y)
     {
-        return x.Priority.CompareTo(y.Priority);
+        return y.Priority.CompareTo(x.Priority);
     }
 }
 
@@ -168,7 +169,7 @@ public static class VoidEventExtension
     }
 }
 
-public delegate void EventHandler<in T>(T args) where T: IEvent;
+public delegate void EventHandler<in T>(T args) where T : IEvent;
 
 public class VoidEvent : IEvent { }
 

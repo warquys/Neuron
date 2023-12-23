@@ -61,6 +61,7 @@ namespace Neuron.Core
             if (Platform.Configuration.FileIo) LoadIoModules();
             
             Platform.Enable();
+            modules.ActivateModules();
             modules.EnableAll();
 
             if (Platform.Configuration.FileIo) LoadIoPlugins();
@@ -80,7 +81,6 @@ namespace Neuron.Core
 
             var assemblies = Kernel.Get<AssemblyManager>();
             var moduleManager = Kernel.Get<ModuleManager>();
-            var pluginManager = Kernel.Get<PluginManager>();
             assemblies.SetupManager();
             
             foreach (var file in Directory.GetFiles(dependenciesDirectory, "*.dll"))
@@ -115,9 +115,7 @@ namespace Neuron.Core
                     error.Exception = e;
                     _logger.Framework(error);
                 }
-            }
-            
-            moduleManager.ActivateModules();
+            }   
         }
 
         public void LoadIoPlugins()

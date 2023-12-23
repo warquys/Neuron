@@ -5,13 +5,13 @@ using Neuron.Core.Logging.Diagnostics;
 
 namespace Neuron.Core.Modules
 {
-    public class ModuleLifecycle
+    public class ModuleLifecycle : ILifeCycle
     {
 
-        private ModuleLoadContext _module;
+        private ModuleContext _module;
         private ILogger _logger;
 
-        public ModuleLifecycle(ModuleLoadContext module, ILogger logger)
+        public ModuleLifecycle(ModuleContext module, ILogger logger)
         {
             _module = module;
             _logger = logger;
@@ -40,7 +40,7 @@ namespace Neuron.Core.Modules
                     DiagnosticsError.Hint("This exception most commonly occurs when a service throws an exception in its Enable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
 
@@ -57,7 +57,7 @@ namespace Neuron.Core.Modules
                     DiagnosticsError.Hint("This exception most commonly occurs when a module throws an exception in its Enable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
         }
@@ -77,7 +77,7 @@ namespace Neuron.Core.Modules
                     DiagnosticsError.Hint("This exception most commonly occurs when a module throws an exception in its Disable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
 
@@ -94,7 +94,7 @@ namespace Neuron.Core.Modules
                     DiagnosticsError.Hint("This exception most commonly occurs when a service throws an exception in its Disable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
         }

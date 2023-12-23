@@ -8,6 +8,7 @@ using Neuron.Core.Events;
 using Neuron.Core.Meta;
 using Neuron.Core.Modules;
 using Neuron.Core.Plugins;
+using Neuron.Modules.Patcher;
 using Ninject;
 
 namespace Neuron.Modules.Patcher
@@ -95,5 +96,5 @@ namespace Neuron.Modules.Patcher
 public class PatchClassBinding : IMetaBinding
 {
     public Type Type { get; set; }
-    public IEnumerable<Type> PromisedServices => new[] {Type};
+    public IEnumerable<Type> PromisedServices => new[] { typeof(PatcherService) };
 }

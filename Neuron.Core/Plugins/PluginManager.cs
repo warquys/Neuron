@@ -83,7 +83,7 @@ public class PluginManager
                                              $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
             );
             error.Exception = e;
-            NeuronDiagnosticHinter.AddCommonHints(e, error);
+            NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
             _logger.Framework(error);
             throw;
             #endregion
@@ -106,7 +106,7 @@ public class PluginManager
                                              $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
             );
             error.Exception = e;
-            NeuronDiagnosticHinter.AddCommonHints(e, error);
+            NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
             _logger.Framework(error);
             throw;
             #endregion
@@ -152,7 +152,7 @@ public class PluginManager
                                              $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
             );
             error.Exception = e;
-            NeuronDiagnosticHinter.AddCommonHints(e, error);
+            NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
             _logger.Framework(error);
             throw;
             #endregion
