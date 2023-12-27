@@ -26,12 +26,12 @@
 		<NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+      <DebugType>embedded</DebugType>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
     </ItemGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-
-    </PropertyGroup>
 
 </Project>
