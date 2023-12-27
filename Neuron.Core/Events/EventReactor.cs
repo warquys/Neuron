@@ -14,7 +14,7 @@ namespace Neuron.Core.Events;
 /// <typeparam name="T">type of the event</typeparam>
 public class EventReactor<T> : IEventReactor where T : IEvent
 {
-
+    private readonly object _locker = new object();
     private readonly List<HandlerRegistration<T>> _registrations = new();
     private readonly HandlerRegistrationComparer<T> _comparer = new (); 
 
@@ -25,7 +25,7 @@ public class EventReactor<T> : IEventReactor where T : IEvent
     /// <param name="evt">the event argument object</param>
     public void Raise(T evt)
     {
-        lock (this)
+        lock (_locker)
         {
             foreach (var registration in _registrations)
             {
@@ -41,7 +41,7 @@ public class EventReactor<T> : IEventReactor where T : IEvent
     /// <param name="priority">the priority of the subscription, the lower take the event first.</param>
     public void Subscribe(EventHandler<T> handler, int priority = 0)
     {
-        lock (this)
+        lock (_locker)
         {
             _registrations.Add(new HandlerRegistration<T>(priority, handler));
             _registrations.Sort(_comparer);
@@ -54,7 +54,7 @@ public class EventReactor<T> : IEventReactor where T : IEvent
     /// <param name="handler">the delegate to unsubscribe</param>
     public void Unsubscribe(EventHandler<T> handler)
     {
-        lock (this)
+        lock (_locker)
         { 
             _registrations.RemoveAll(x => x.Handler == handler);
         }
