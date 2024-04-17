@@ -16,7 +16,11 @@ public class EventReactor<T> : IEventReactor where T : IEvent
 {
     private readonly object _locker = new object();
     private readonly List<HandlerRegistration<T>> _registrations = new();
-    private readonly HandlerRegistrationComparer<T> _comparer = new (); 
+    private readonly HandlerRegistrationComparer<T> _comparer = new ();
+
+    public int Registred => _registrations.Count;
+    public bool Used => Registred > 0;
+
 
     /// <summary>
     /// Invokes the multicast event system.
@@ -25,6 +29,8 @@ public class EventReactor<T> : IEventReactor where T : IEvent
     /// <param name="evt">the event argument object</param>
     public void Raise(T evt)
     {
+        if (!Used) return;
+
         lock (_locker)
         {
             foreach (var registration in _registrations)
