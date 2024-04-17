@@ -16,10 +16,10 @@ namespace Neuron.Core.Scheduling;
 public abstract class CoroutineReactor
 {
     public ILogger Logger { get; set; }
-        
-    private List<CoroutineRegistration> _coroutines = new();
-    private ConcurrentQueue<CoroutineRegistration> _addCoroutines = new();
-    private ConcurrentQueue<CoroutineRegistration> _removeCoroutines = new();
+
+    protected List<CoroutineRegistration> _coroutines = new();
+    protected ConcurrentQueue<CoroutineRegistration> _addCoroutines = new();
+    protected ConcurrentQueue<CoroutineRegistration> _removeCoroutines = new();
 
     /// <summary>
     /// Starts a new coroutine defined by the enumerator.
@@ -56,7 +56,7 @@ public abstract class CoroutineReactor
                 if (coroutine.MoveNext())
                 {
                     var delay = coroutine.Current;
-                    pair.ScheduledUpdate = currentMillis + (long) (delay * 1000);
+                    pair.ScheduledUpdate += (long) (delay * 1000);
                 }
                 else
                 {
