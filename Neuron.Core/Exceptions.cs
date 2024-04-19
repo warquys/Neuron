@@ -36,8 +36,11 @@ public class ModuleOrPluginConflicException : Exception
         _plugin = Globals.Kernel.Get<PluginManager>();
     }
 
-
-    public ModuleOrPluginConflicException() { }
+    public ModuleOrPluginConflicException() 
+    {
+        Conflic1 = new UnknowContext(null);
+        Conflic2 = new UnknowContext(null);
+    }
 
     public ModuleOrPluginConflicException(string message, ILoadingContext conflic1, ILoadingContext conflic2) : base(message)
     {
