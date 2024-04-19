@@ -6,6 +6,7 @@ using Ninject;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace Neuron.Core;
 
@@ -19,18 +20,6 @@ public class IndefiniteExtensionPointException: Exception
       SerializationInfo info,
       StreamingContext context) : base(info, context) { }
 }
-
-[Serializable]
-public class MyException : Exception
-{
-    public MyException() { }
-    public MyException(string message) : base(message) { }
-    public MyException(string message, Exception inner) : base(message, inner) { }
-    protected MyException(
-      SerializationInfo info,
-      StreamingContext context) : base(info, context) { }
-}
-
 
 [Serializable]
 public class ModuleOrPluginConflicException : Exception
@@ -74,13 +63,13 @@ public class ModuleOrPluginConflicException : Exception
 
         context1 = _plugin.Plugins.Find(p => p.Assembly == conflic1.Assembly);
         if (context1 == null)
-            context1 = _plugin.Plugins.Find(p => p.Assembly == conflic1.Assembly);
+            context1 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflic1.Assembly);
         if (context1 == null)
             context1 = new UnknowContext(conflic1.Assembly);
 
         context2 = _plugin.Plugins.Find(p => p.Assembly == conflic2.Assembly);
         if (context2 == null)
-            context2 = _plugin.Plugins.Find(p => p.Assembly == conflic2.Assembly);
+            context2 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflic2.Assembly);
         if (context2 == null)
             context2 = new UnknowContext(conflic2.Assembly);
 

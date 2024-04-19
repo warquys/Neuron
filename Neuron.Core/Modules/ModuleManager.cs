@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Neuron.Core.Dependencies;
 using Neuron.Core.Events;
@@ -8,7 +9,6 @@ using Neuron.Core.Logging.Diagnostics;
 using Neuron.Core.Logging.Utils;
 using Neuron.Core.Meta;
 using Ninject;
-using Ninject.Activation;
 
 namespace Neuron.Core.Modules;
 
@@ -24,7 +24,9 @@ public class ModuleManager
     private List<ModuleContext> _moduleBuffer;
     private List<ModuleContext> _activeModules;
 
-    public bool IsLoading { get; private set; } = false;
+    private ReadOnlyCollection<ModuleContext> _activeModuleProxy;
+
+    public bool IsLocked { get; private set; } = false;
 
     public readonly EventReactor<ModuleLoadEvent> ModuleLoad = new();
     public readonly EventReactor<ModuleLoadEvent> ModuleLoadLate = new();
@@ -38,6 +40,7 @@ public class ModuleManager
         _serviceManager = serviceManager;
         _moduleBuffer = new List<ModuleContext>();
         _activeModules = new List<ModuleContext>();
+        _activeModuleProxy = _activeModules.AsReadOnly();
         _logger = _neuronLogger.GetLogger<ModuleManager>();
     }
     
@@ -47,10 +50,13 @@ public class ModuleManager
     public ModuleContext Get(string name) 
         => _activeModules.FirstOrDefault(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
-    public IEnumerable<ModuleContext> GetAllModules() => _activeModules;
+    public IEnumerable<ModuleContext> GetAllModules() => _activeModuleProxy;
 
     public ModuleContext LoadModule(IEnumerable<Type> types)
     {
+        if (IsLocked)
+            throw new InvalidOperationException("Cannot load module after the activation.");
+
         var batch = _metaManager.Analyze(types);
         var moduleAttributes = batch.Types.Where(x => x.TryGetAttribute<ModuleAttribute>(out _)).Select(meta =>
         {
@@ -59,7 +65,7 @@ public class ModuleManager
         }).ToArray();
 
         if (moduleAttributes.Length != 1) throw new IndefiniteExtensionPointException($"Expected single module but got {moduleAttributes.Length}");
-            
+
         var first = moduleAttributes.FirstOrDefault();
         var instance = first.meta.New();
 
@@ -71,14 +77,14 @@ public class ModuleManager
             ModuleType = instance.GetType()
         };
         context.Lifecycle = new ModuleLifecycle(context, _logger);
-            
+
         _moduleBuffer.Add(context);
         return context;
     }
 
     public void ActivateModules()
     {
-        IsLoading = true;
+        IsLocked = true;
         var moduleResolver = new CyclicDependencyResolver<ModuleContext>();
         moduleResolver.AddDependables(_activeModules);
         moduleResolver.AddDependencies(_moduleBuffer);
@@ -285,7 +291,6 @@ public class ModuleManager
             // Save context reference
             _activeModules.Add(context);
         }
-        IsLoading = false;
     }
 
     public void EnableAll()
