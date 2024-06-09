@@ -1,4 +1,5 @@
-﻿using Neuron.Core.Meta;
+﻿using System.ComponentModel;
+using Neuron.Core.Meta;
 
 namespace Neuron.Modules.Commands.Command;
 
@@ -6,9 +7,11 @@ public interface ICommand
 {
     public CommandAttribute Meta { get; set; }
 
-    internal CommandResult InternalPreExecute(ICommandContext context);
-        
-    internal abstract CommandResult InternalExecute(ICommandContext context);
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    CommandResult InternalPreExecute(ICommandContext context);
+
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    abstract CommandResult InternalExecute(ICommandContext context);
 }
 
 public abstract class Command : InjectedLoggerBase, ICommand

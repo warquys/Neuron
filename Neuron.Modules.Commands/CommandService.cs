@@ -48,8 +48,8 @@ public class CommandService : Service
     /// will replace the last register. 
     /// <br>else a <see cref="SCPSunrise.Excepetion.ModuleOrPluginConflicException"/> get throw </br> 
     /// </param>
-    public CommandReactor CreateCachedCommandReactor(bool overrideName = false)
-        => CreateCommandReactor(new CachedCommandHandler(_kernel, _neuronLogger, overrideName));
+    public CommandReactor CreateHashedCommandReactor(bool overrideName = false)
+        => CreateCommandReactor(new HashedCommandHandler(_kernel, _neuronLogger, overrideName));
 
     public CommandReactor CreateCommandReactor<TCommandHandler>(TCommandHandler handler) 
         where TCommandHandler : ICommandHandler
