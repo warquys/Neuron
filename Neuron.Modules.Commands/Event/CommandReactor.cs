@@ -15,16 +15,20 @@ public class CommandReactor : EventReactor<CommandEvent>
     private NeuronLogger _neuronLogger;
     private ILogger _logger;
 
-    public CommandHandler Handler { get; }
+    public ICommandHandler Handler { get; }
 
     public FallbackHandler NotFoundFallbackHandler = DefaultNotFound;
     
-    public CommandReactor(IKernel kernel, NeuronLogger neuronLogger)
+    public CommandReactor(IKernel kernel, NeuronLogger neuronLogger) :
+        this(kernel, neuronLogger, new CommandHandler(kernel, neuronLogger))
+    { }
+
+    public CommandReactor(IKernel kernel, NeuronLogger neuronLogger, ICommandHandler commandHandler)
     {
         _kernel = kernel;
         _neuronLogger = neuronLogger;
         _logger = _neuronLogger.GetLogger<CommandReactor>();
-        Handler = new CommandHandler(_kernel, _neuronLogger);
+        Handler = commandHandler;
         Subscribe(Handler.Raise);
     }
 

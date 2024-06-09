@@ -1,36 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Library</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>Library</OutputType>
         <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU</Platforms>
         <RootNamespace>Neuron.Modules.Patcher</RootNamespace>
         <PackageId>NeuronModding.Modules.Patcher</PackageId>
     </PropertyGroup>
 
-
     <Import Project="../Neuron.props" />
     
     <ItemGroup>
-        <PackageReference Include="Lib.Harmony" Version="2.2.2" />
-        <PackageReference Include="Ninject" Version="3.3.6" />
-        <PackageReference Include="SYML" Version="1.0.2" />
-        <PackageReference Include="YamlDotNet" Version="11.2.1" />
+        <PackageReference Include="Lib.Harmony" Version="2.3.3" />
+        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+        <PackageReference Include="YamlDotNet" Version="16.2.0" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <DebugType>Portable</DebugType>
-        <DocumentationFile />
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DebugType>Portable</DebugType>
+		<Optimize>True</Optimize>
+		<NoWarn>CS1591</NoWarn>
+		<DocumentationFile />
+	</PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+      <DebugType>embedded</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-
-    </PropertyGroup>
+    <ItemGroup>
+      <Reference Include="SYML">
+        <HintPath>..\Ref\SYML.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 
 </Project>

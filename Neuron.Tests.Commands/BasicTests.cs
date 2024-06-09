@@ -1,12 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Neuron.Core;
+﻿using Neuron.Core;
 using Neuron.Core.Logging;
-using Neuron.Core.Meta;
-using Neuron.Core.Modules;
 using Neuron.Core.Platform;
 using Neuron.Modules.Commands;
 using Neuron.Modules.Commands.Command;
+using Neuron.Modules.Commands.Event;
 using Ninject;
 using Xunit;
 using Xunit.Abstractions;
@@ -30,25 +27,35 @@ namespace Neuron.Tests.Commands
         }
 
         [Fact]
-        public void Test1()
+        public void Test1_DefaultHandler()
         {
             var service = new CommandService(_neuron.NeuronBase.Kernel, _neuronLogger);
-            var defaultReactor = service.CreateCommandReactor();
-            
-            defaultReactor.RegisterCommand<ExampleCommand>();
-            var result = defaultReactor.Invoke(DefaultCommandContext.Of("Example"));
+            Test1(service, service.CreateCommandReactor());
+        }   
+
+        [Fact]
+        public void Test1_CachedHandler()
+        {
+            var service = new CommandService(_neuron.NeuronBase.Kernel, _neuronLogger);
+            Test1(service, service.CreateHashedCommandReactor());
+        }
+
+        private void Test1(CommandService service, CommandReactor reactor)
+        {
+            reactor.RegisterCommand<ExampleCommand>();
+            var result = reactor.Invoke(DefaultCommandContext.Of("Example"));
             _logger.Info(result.ToString());
             Assert.NotNull(result);
             Assert.True(result.Successful);
             
             
-            var result2 = defaultReactor.Invoke(DefaultCommandContext.Of("None"));
+            var result2 = reactor.Invoke(DefaultCommandContext.Of("None"));
             _logger.Info(result2.ToString());
             Assert.NotNull(result2);
             Assert.False(result2.Successful);
             
             
-            var result3 = defaultReactor.Invoke(DefaultCommandContext.Of("ex"));
+            var result3 = reactor.Invoke(DefaultCommandContext.Of("ex"));
             _logger.Info(result3.ToString());
             Assert.NotNull(result3);
             Assert.True(result3.Successful);
@@ -61,18 +68,30 @@ namespace Neuron.Tests.Commands
             var result5 = customReactor.Invoke(DefaultCommandContext.Of("custom"));
             _logger.Info(result5.ToString());
         }
-        
+
+
         [Fact]
-        public void Test2()
+        public void Test2_DefaultHandler()
         {
             var service = new CommandService(_neuron.NeuronBase.Kernel, _neuronLogger);
-            var defaultReactor = service.CreateCommandReactor();
+            Test2(service, service.CreateCommandReactor());
+        }
+
+        [Fact]
+        public void Test2_CachedHandler()
+        {
+            var service = new CommandService(_neuron.NeuronBase.Kernel, _neuronLogger);
+            Test2(service, service.CreateHashedCommandReactor());
+        }
+        
+        private void Test2(CommandService service, CommandReactor reactor)
+        {
             service.GlobalHandler.RegisterCommand<ExampleCommand>();
-            var result = defaultReactor.Invoke(DefaultCommandContext.Of("Example"));
+            var result = reactor.Invoke(DefaultCommandContext.Of("Example"));
             _logger.Info("[Result]", result);
             Assert.NotNull(result);
             Assert.True(result.Successful);
-            var result2 = defaultReactor.Invoke(DefaultCommandContext.Of("None"));
+            var result2 = reactor.Invoke(DefaultCommandContext.Of("None"));
             _logger.Info("[Result]", result2);
             Assert.NotNull(result2);
             Assert.False(result2.Successful);

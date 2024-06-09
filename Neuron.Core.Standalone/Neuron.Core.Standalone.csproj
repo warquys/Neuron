@@ -2,25 +2,27 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <Configurations>Debug;Release</Configurations>
+		<TargetFramework>net8.0</TargetFramework>
+		<Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU</Platforms>
         <RootNamespace>Neuron.Core.Standalone</RootNamespace>
         <PackageId>NeuronModding.Core.Standalone</PackageId>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-
     <Import Project="../Neuron.props" />
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <DebugType>Portable</DebugType>
-        <DocumentationFile />
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DebugType>Portable</DebugType>
+		<Optimize>True</Optimize>
+		<NoWarn>CS1591</NoWarn>
+		<DocumentationFile />
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Neuron.Core.Dependencies;
 using Neuron.Core.Events;
@@ -20,8 +21,10 @@ public class ModuleManager
     private NeuronLogger _neuronLogger;
     private ILogger _logger;
 
-    private List<ModuleLoadContext> _moduleBuffer;
-    private List<ModuleLoadContext> _activeModules;
+    private List<ModuleContext> _moduleBuffer;
+    private List<ModuleContext> _activeModules;
+
+    private ReadOnlyCollection<ModuleLoadContext> _activeModuleProxy;
 
     public bool IsLocked { get; private set; } = false;
 
@@ -37,19 +40,23 @@ public class ModuleManager
         _serviceManager = serviceManager;
         _moduleBuffer = new List<ModuleLoadContext>();
         _activeModules = new List<ModuleLoadContext>();
+        _activeModuleProxy = _activeModules.AsReadOnly();
         _logger = _neuronLogger.GetLogger<ModuleManager>();
     }
     
     public bool HasModule(string name)
         => _activeModules.Any(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
-    public ModuleLoadContext Get(string name) 
+    public ModuleContext Get(string name) 
         => _activeModules.FirstOrDefault(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
-    public IEnumerable<ModuleLoadContext> GetAllModules() => _activeModules;
+    public IEnumerable<ModuleLoadContext> GetAllModules() => _activeModuleProxy;
 
-    public ModuleLoadContext LoadModule(IEnumerable<Type> types)
+    public ModuleContext LoadModule(IEnumerable<Type> types)
     {
+        if (IsLocked)
+            throw new InvalidOperationException("Cannot load module after the activation.");
+
         var batch = _metaManager.Analyze(types);
         var moduleAttributes = batch.Types.Where(x => x.TryGetAttribute<ModuleAttribute>(out _)).Select(meta =>
         {
@@ -58,11 +65,11 @@ public class ModuleManager
         }).ToArray();
 
         if (moduleAttributes.Length != 1) throw new IndefiniteExtensionPointException($"Expected single module but got {moduleAttributes.Length}");
-            
+
         var first = moduleAttributes.FirstOrDefault();
         var instance = first.meta.New();
 
-        var context = new ModuleLoadContext()
+        var context = new ModuleContext()
         {
             Attribute = first.attribute,
             Batch = batch,
@@ -70,7 +77,7 @@ public class ModuleManager
             ModuleType = instance.GetType()
         };
         context.Lifecycle = new ModuleLifecycle(context, _logger);
-            
+
         _moduleBuffer.Add(context);
         return context;
     }
@@ -78,7 +85,6 @@ public class ModuleManager
     public void ActivateModules()
     {
         IsLocked = true;
-        
         var moduleResolver = new CyclicDependencyResolver<ModuleLoadContext>();
         moduleResolver.AddDependables(_activeModules);
         moduleResolver.AddDependencies(_moduleBuffer);
@@ -103,18 +109,19 @@ public class ModuleManager
                 _logger.Framework(error);
             }
         }
-        
+
         foreach (var context in moduleResult.Solved)
         {
             var batchGeneratedBindings = context.Batch.GenerateBindings();
             var emittedServices = batchGeneratedBindings.OfType<ServiceRegistration>();
             var promisedServices = batchGeneratedBindings.SelectMany(x => x.PromisedServices).ToList();
-            
+
             context.MetaBindings = batchGeneratedBindings; // Make bindings permanently accessible
             context.Module = (Module)Activator.CreateInstance(context.ModuleType); // Create un-injected module instance
+            context.Module.SelfContext = context;
             context.Module.NeuronLoggerInjected = _neuronLogger; // Manually inject logger
             _kernel.Bind(context.ModuleType).ToConstant(context.Module).InSingletonScope(); // Make module available for kernel without injecting
-            
+
             try
             {
                 context.Module.Load(_kernel);
@@ -128,7 +135,7 @@ public class ModuleManager
                                                  $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
                 throw;
                 #endregion
@@ -167,7 +174,7 @@ public class ModuleManager
                     error.Nodes.Add(DiagnosticsError.Description($"Service {registration.MetaType.Type.FullName} is " +
                                                                  $"missing following bindings: {string.Join(", ", missing)}"));
                 }
-                
+
                 error.Nodes.Add(DiagnosticsError.Property("Service Dependencies", "Tree View\n" + serviceResolver.BuildTree(serviceResult)));
                 _logger.Framework(error);
                 #endregion
@@ -198,21 +205,22 @@ public class ModuleManager
                     DiagnosticsError.Summary("Unsatisfied module property dependencies"),
                     DiagnosticsError.Description($"Could not resolve all property dependencies for module '{context.Attribute.Name}'.")
                 );
-                
+
                 var missing = moduleDep.Dependencies.Where(x => !modulePropertyResult.Dependables.Contains(x))
                     .Select(x => x.ToString()).ToList();
                 error.Nodes.Add(DiagnosticsError.Description($"The module is missing following bindings: {string.Join(", ", missing)}"));
-                
+
                 error.Nodes.Add(DiagnosticsError.Property("Module Dependencies", "Tree View\n" + modulePropertyResolver.BuildTree(modulePropertyResult)));
                 _logger.Framework(error);
-                
+
                 var modHanGra = _neuronBase.Configuration.Engine.GracefulMissingServiceDependencies;
-                if (!modHanGra) continue;
+                if (!modHanGra) return;
                 #endregion
             }
             #endregion
-            
-            try {
+
+            try
+            {
                 var loadEvent = new ModuleLoadEvent { Context = context };
                 ModuleLoad.Raise(loadEvent);
             }
@@ -225,7 +233,7 @@ public class ModuleManager
                                                  $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
                 throw;
                 #endregion
@@ -236,7 +244,7 @@ public class ModuleManager
             {
                 _serviceManager.BindService(registration);
                 var serv = _kernel.Get(registration.ServiceType); // Create service using kernel
-                
+
                 // Hook service lifecycle to module lifecycle
                 context.Lifecycle.EnableComponents.SubscribeAction(serv,
                     registration.MetaType.Type.GetMethod(nameof(Service.Enable)));
@@ -244,8 +252,9 @@ public class ModuleManager
                     registration.MetaType.Type.GetMethod(nameof(Service.Disable)));
                 context.Lifecycle.DisableComponents.Subscribe(_ => _serviceManager.UnbindService(registration));
             }
-            
-            try {
+
+            try
+            {
                 var loadEvent = new ModuleLoadEvent { Context = context };
                 ModuleLoadLate.Raise(loadEvent);
             }
@@ -258,12 +267,12 @@ public class ModuleManager
                                                  $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
                 throw;
                 #endregion
             }
-            
+
             context.Lifecycle.Enable.Subscribe(delegate
             {
                 // Dependency checks at this point make no sense anymore since Ninject keeps messing with the bindings,
@@ -305,7 +314,7 @@ public class ModuleManager
                     DiagnosticsError.Hint("This exception most commonly occurs when a module throws an exception in its LateEnable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
         }
@@ -334,5 +343,5 @@ internal class ModulePropertyDependencyHolder : SimpleDependencyHolderBase
 
 public class ModuleLoadEvent : IEvent
 {
-    public ModuleLoadContext Context { get; set; }
+    public ModuleContext Context { get; set; }
 }

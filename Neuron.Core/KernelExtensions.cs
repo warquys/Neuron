@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Neuron.Core.Dependencies;
 using Ninject;
 

@@ -20,7 +20,7 @@ public class PluginManager
     private NeuronLogger _neuronLogger;
     private ILogger _logger;
 
-    public List<PluginContext> Plugins { get; }
+    public List<PluginLoadContext> Plugins { get; }
 
     public readonly EventReactor<PluginLoadEvent> PluginLoad = new();
     public readonly EventReactor<PluginLoadEvent> PluginLoadLate = new();
@@ -38,12 +38,12 @@ public class PluginManager
         _eventManager.RegisterEvent(PluginLoad);
         _eventManager.RegisterEvent(PluginUnload);
 
-        Plugins = new List<PluginContext>();
+        Plugins = new List<PluginLoadContext>();
     }
 
     public void UnloadAll() => Plugins.ToList().ForEach(UnloadPlugin);
     
-    public PluginContext LoadPlugin(IEnumerable<Type> types, Assembly assembly)
+    public PluginLoadContext LoadPlugin(IEnumerable<Type> types, Assembly assembly)
     {
         var batch = _metaManager.Analyze(types);
         var pluginAttributes = batch.Types.Where(x => x.TryGetAttribute<PluginAttribute>(out _)).Select(meta =>
@@ -59,7 +59,7 @@ public class PluginManager
         instance.NeuronLoggerInjected = _neuronLogger;
         _kernel.Bind(first.meta.Type).ToConstant(instance).InSingletonScope();
         
-        var context = new PluginContext()
+        var context = new PluginLoadContext()
         {
             Plugin = instance,
             PluginType = first.meta.Type,
@@ -83,7 +83,7 @@ public class PluginManager
                                              $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
             );
             error.Exception = e;
-            NeuronDiagnosticHinter.AddCommonHints(e, error);
+            NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
             _logger.Framework(error);
             throw;
             #endregion
@@ -106,7 +106,7 @@ public class PluginManager
                                              $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
             );
             error.Exception = e;
-            NeuronDiagnosticHinter.AddCommonHints(e, error);
+            NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
             _logger.Framework(error);
             throw;
             #endregion
@@ -122,14 +122,14 @@ public class PluginManager
         return context;
     }
 
-    public void ReloadPlugin(PluginContext context)
+    public void ReloadPlugin(PluginLoadContext context)
     {
         // Closest I can get to a reload with the current system
         context.Lifecycle.DisableSignal();
         context.Lifecycle.EnableSignal();
     }
 
-    public void UnloadPlugin(PluginContext context)
+    public void UnloadPlugin(PluginLoadContext context)
     {
         Plugins.Remove(context);
         _kernel.Unbind(context.PluginType);
@@ -152,7 +152,7 @@ public class PluginManager
                                              $"resulted in an exception of type '{e.GetType().Name}' at call site {e.TargetSite}.")
             );
             error.Exception = e;
-            NeuronDiagnosticHinter.AddCommonHints(e, error);
+            NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
             _logger.Framework(error);
             throw;
             #endregion
@@ -162,10 +162,10 @@ public class PluginManager
 
 public class PluginLoadEvent : IEvent
 {
-    public PluginContext Context { get; set; }
+    public PluginLoadContext Context { get; set; }
 }
 
 public class PluginUnloadEvent : IEvent
 {
-    public PluginContext Context { get; set; }
+    public PluginLoadContext Context { get; set; }
 }

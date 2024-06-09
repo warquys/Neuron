@@ -6,13 +6,13 @@ using Neuron.Core.Modules;
 
 namespace Neuron.Core.Plugins
 {
-    public class PluginLifecycle
+    public class PluginLifecycle : ILifeCycle
     {
 
-        private PluginContext _plugin;
+        private PluginLoadContext _plugin;
         private ILogger _logger;
 
-        public PluginLifecycle(PluginContext plugin, ILogger logger)
+        public PluginLifecycle(PluginLoadContext plugin, ILogger logger)
         {
             _plugin = plugin;
             _logger = logger;
@@ -36,7 +36,7 @@ namespace Neuron.Core.Plugins
                     DiagnosticsError.Hint("This exception most commonly occurs when a module throws an exception in its Enable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
         }
@@ -56,7 +56,7 @@ namespace Neuron.Core.Plugins
                     DiagnosticsError.Hint("This exception most commonly occurs when a module throws an exception in its Disable() method")
                 );
                 error.Exception = e;
-                NeuronDiagnosticHinter.AddCommonHints(e, error);
+                NeuronDiagnosticHinter.AddExeptionInformationHints(e, error);
                 _logger.Framework(error);
             }
         }

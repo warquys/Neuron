@@ -16,9 +16,18 @@ public class MetaType
     public bool TryGetAttribute<T>(out T output)
     {
         output = default;
+        if (!TryGetAttributes<T>(out var attributes))
+            return false;
+        output = attributes[0];
+        return true;
+    }
+
+    public bool TryGetAttributes<T>(out T[] output)
+    {
+        output = default;
         var matching = Attributes.OfType<T>().ToArray();
         if (matching.Length == 0) return false;
-        output = matching[0];
+        output = matching;
         return true;
     }
 
@@ -43,19 +52,21 @@ public class MetaType
     {
         return (Type != null ? Type.GetHashCode() : 0);
     }
-    
+
     /// <summary>
-    /// Checks if the specified type qualifies as being meta, and then parses it as <see cref="MetaType"/> or return null.
-    /// Having at least one of following properties makes an object meta:<br/><br/>
-    /// 1. Have a <see cref="MetaAttribute"/> or another Attribute extending <see cref="MetaAttributeBase"/><br/>
-    /// 2. Extend a class which is has an <see cref="MetaAttribute"/> or another attribute extending <see cref="MetaAttributeBase"/><br/>
-    /// 3. Implement the <see cref="IMetaObject"/> or derived interfaces.<br/>
-    /// 4. Have properties which have a <see cref="MetaAttribute"/> or another attribute extending <see cref="MetaAttributeBase"/><br/>
-    /// 5. Have methods which have a <see cref="MetaAttribute"/> or another attribute extending <see cref="MetaAttributeBase"/><br/>
+    /// Checks if the specified type qualifies as being meta, and then parses it as <see cref="MetaType"/> or return <see langword="null"/>.
+    /// Having at least one of following properties makes an object meta:
+    /// <list type="number">
+    /// <item/> Have a <see cref="MetaAttribute"/> or another Attribute extending <see cref="MetaAttributeBase"/>
+    /// <item/> Extend a class which is has an <see cref="MetaAttribute"/> or another attribute extending <see cref="MetaAttributeBase"/>
+    /// <item/> Implement the <see cref="IMetaObject"/> or derived interfaces.
+    /// <item/> Have properties which have a <see cref="MetaAttribute"/> or another attribute extending <see cref="MetaAttributeBase"/>
+    /// <item/> Have methods which have a <see cref="MetaAttribute"/> or another attribute extending <see cref="MetaAttributeBase"/>
+    /// </list>
     /// <br/>
     /// </summary>
     /// <param name="type">the type to analyze</param>
-    /// <returns>the analyzed MetaType or null</returns>
+    /// <returns>the analyzed <see cref="MetaType"/> or <see langword="null"/></returns>
     public static MetaType TryGetMetaType(Type type)
     {
         var keepType = false;

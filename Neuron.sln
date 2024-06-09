@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.1.32328.378
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Core", "Neuron.Core\Neuron.Core.csproj", "{2F17FA64-F5B9-43DE-9887-D221B2798CED}"
 EndProject
@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Modules.Commands", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Tests.Commands", "Neuron.Tests.Commands\Neuron.Tests.Commands.csproj", "{38630A44-2CA2-4B7F-B4E1-219C1AADEA42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Core.Standalone", "Neuron.Core.Standalone\Neuron.Core.Standalone.csproj", "{7AF6BE34-EF21-42B5-A59F-A9027F6C0CA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Core.Standalone", "Neuron.Core.Standalone\Neuron.Core.Standalone.csproj", "{7AF6BE34-EF21-42B5-A59F-A9027F6C0CA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Modules.Configs", "Neuron.Modules.Configs\Neuron.Modules.Configs.csproj", "{1FFB9AB5-BEE4-4A9C-BDFA-A38066A769D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Modules.Configs", "Neuron.Modules.Configs\Neuron.Modules.Configs.csproj", "{1FFB9AB5-BEE4-4A9C-BDFA-A38066A769D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Tests.Configs", "Neuron.Tests.Configs\Neuron.Tests.Configs.csproj", "{CF98E637-DC5B-48A9-A131-B08D87D1F60A}"
+Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Tests.Configs", "Neuron.Tests.Configs\Neuron.Tests.Configs.csproj", "{CF98E637-DC5B-48A9-A131-B08D87D1F60A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neuron.Modules.Reload", "Neuron.Modules.Reload\Neuron.Modules.Reload.csproj", "{B477E117-27E3-47E1-989D-D74B2D09DD76}"
+Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Modules.Reload", "Neuron.Modules.Reload\Neuron.Modules.Reload.csproj", "{B477E117-27E3-47E1-989D-D74B2D09DD76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,5 +69,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC7015E3-DF22-4BB4-B112-D12E32E88BFE}
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

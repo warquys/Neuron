@@ -11,7 +11,7 @@ public class Plugin : InjectedLoggerBase, IMetaObject
 }
 
 [AttributeUsage(AttributeTargets.Class)]
-public class PluginAttribute : Attribute
+public class PluginAttribute : Attribute, ILoadableAttributeContext
 {
     public string Name { get; set; } = "Unnamed Plugin";
     public string Description { get; set; } = "no description provided";

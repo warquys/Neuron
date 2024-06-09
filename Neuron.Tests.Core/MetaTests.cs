@@ -27,24 +27,24 @@ public class MetaTests
             
         Assert.Null(MetaType.TryGetMetaType(typeof(NonMetaType)));
         Assert.NotNull(MetaType.TryGetMetaType(typeof(DirectMetaType)));
-        Assert.Equal(1, MetaType.TryGetMetaType(typeof(DirectMetaType)).Attributes.Length);
-        Assert.Equal(0, MetaType.TryGetMetaType(typeof(DirectMetaType)).Properties.Length);
+        Assert.Single(MetaType.TryGetMetaType(typeof(DirectMetaType)).Attributes);
+        Assert.Empty(MetaType.TryGetMetaType(typeof(DirectMetaType)).Properties);
         Assert.NotNull(MetaType.TryGetMetaType(typeof(IndirectMetaType)));
-        Assert.Equal(1, MetaType.TryGetMetaType(typeof(IndirectMetaType)).Attributes.Length);
-        Assert.Equal(0, MetaType.TryGetMetaType(typeof(IndirectMetaType)).Properties.Length);
+        Assert.Single(MetaType.TryGetMetaType(typeof(IndirectMetaType)).Attributes);
+        Assert.Empty(MetaType.TryGetMetaType(typeof(IndirectMetaType)).Properties);
         Assert.NotNull(MetaType.TryGetMetaType(typeof(MetaMethodType)));
-        Assert.Equal(0, MetaType.TryGetMetaType(typeof(MetaMethodType)).Attributes.Length);
-        Assert.Equal(0, MetaType.TryGetMetaType(typeof(MetaMethodType)).Properties.Length);
+        Assert.Empty(MetaType.TryGetMetaType(typeof(MetaMethodType)).Attributes);
+        Assert.Empty(MetaType.TryGetMetaType(typeof(MetaMethodType)).Properties);
         Assert.NotNull(MetaType.TryGetMetaType(typeof(MetaPropertyType)));
-        Assert.Equal(0, MetaType.TryGetMetaType(typeof(MetaPropertyType)).Attributes.Length);
-        Assert.Equal(1, MetaType.TryGetMetaType(typeof(MetaPropertyType)).Properties.Length);
+        Assert.Empty(MetaType.TryGetMetaType(typeof(MetaPropertyType)).Attributes);
+        Assert.Single(MetaType.TryGetMetaType(typeof(MetaPropertyType)).Properties);
             
         Assert.NotNull(MetaType.TryGetMetaType(typeof(ExtendingMetaType)));
-        Assert.Equal(1, MetaType.TryGetMetaType(typeof(ExtendingMetaType)).Attributes.Length);
+        Assert.Single(MetaType.TryGetMetaType(typeof(ExtendingMetaType)).Attributes);
         Assert.NotNull(MetaType.TryGetMetaType(typeof(ImplementingMetaType)));
-        Assert.Equal(1, MetaType.TryGetMetaType(typeof(ImplementingMetaType)).Attributes.Length);
+        Assert.Single(MetaType.TryGetMetaType(typeof(ImplementingMetaType)).Attributes);
         Assert.NotNull(MetaType.TryGetMetaType(typeof(HighlyNestedMetaType)));
-        Assert.Equal(1, MetaType.TryGetMetaType(typeof(HighlyNestedMetaType)).Attributes.Length);
+        Assert.Single(MetaType.TryGetMetaType(typeof(HighlyNestedMetaType)).Attributes);
         Assert.NotNull(MetaType.TryGetMetaType(typeof(OverloadMethodType)));
     }
 }

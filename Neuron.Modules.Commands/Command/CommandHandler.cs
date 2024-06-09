@@ -9,7 +9,11 @@ using Ninject;
 
 namespace Neuron.Modules.Commands.Command;
 
-public class CommandHandler
+/// <summary>
+/// Handle commands in the following manner, any command register which has the name or alias
+/// of the command being executed will be executed.
+/// </summary>
+public class CommandHandler : ICommandHandler
 {
     private IKernel _kernel;
     private NeuronLogger _neuronLogger;
@@ -27,8 +31,8 @@ public class CommandHandler
 
     public void Raise(CommandEvent commandEvent)
     {
-        if(commandEvent.IsHandled) return;
-        
+        if (commandEvent.IsHandled) return;
+
         foreach (var command in Commands)
         {
             var meta = command.Meta;
@@ -38,7 +42,7 @@ public class CommandHandler
 
             foreach (var name in names)
             {
-                if(!name.Equals(commandEvent.Context.Command, StringComparison.OrdinalIgnoreCase)) continue;
+                if (!name.Equals(commandEvent.Context.Command, StringComparison.OrdinalIgnoreCase)) continue;
 
                 var pre = command.InternalPreExecute(commandEvent.Context);
                 if (pre != null)
@@ -53,24 +57,31 @@ public class CommandHandler
 
                 commandEvent.Result = handled;
                 commandEvent.IsHandled = true;
-                break;
             }
         }
     }
 
     public void RegisterCommand(Type type)
+        => RegisterCommand(type, type.GetCustomAttribute<CommandAttribute>());
+
+    public void RegisterCommand(Type type, CommandAttribute meta)
     {
+        if (meta == null) return;
         if (!typeof(ICommand).IsAssignableFrom(type)) return;
         var command = (ICommand)_kernel.Get(type);
-        command.Meta = type.GetCustomAttribute<CommandAttribute>();
+        command.Meta = meta;
         _commands.Add(command);
     }
-        
+
     public void RegisterCommand<TCommand>() where TCommand : ICommand => RegisterCommand(typeof(TCommand));
 
     public void RegisterCommand<TCommand>(TCommand command) where TCommand : ICommand
+        => RegisterCommand(command, typeof(TCommand).GetCustomAttribute<CommandAttribute>());
+
+    public void RegisterCommand<TCommand>(TCommand command, CommandAttribute meta) where TCommand : ICommand
     {
-        command.Meta = typeof(TCommand).GetCustomAttribute<CommandAttribute>();
+        if (meta == null) return;
+        command.Meta = meta;
         _commands.Add(command);
     }
 

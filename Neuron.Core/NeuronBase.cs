@@ -16,8 +16,13 @@ namespace Neuron.Core
         
         public NeuronBase(IPlatform platform)
         {
+            var settings = new NinjectSettings
+            {
+                
+            };
+
             Platform = platform;
-            Kernel = new StandardKernel();
+            Kernel = new StandardKernel(settings);
             Globals.Instance = this;
             Globals.Kernel = Kernel;
         }

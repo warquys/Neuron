@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Library</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>Library</OutputType>
         <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU</Platforms>
         <RootNamespace>Neuron.Core</RootNamespace>
@@ -12,10 +13,15 @@
     <Import Project="../Neuron.props" />
     
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
-        <PackageReference Include="Ninject" Version="3.3.6" />
-        <PackageReference Include="SYML" Version="1.0.2" />
-        <PackageReference Include="YamlDotNet" Version="11.2.1" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
+        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+        <PackageReference Include="YamlDotNet" Version="16.2.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Reference Include="SYML">
+        <HintPath>..\Ref\SYML.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -23,10 +29,12 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <DebugType>Portable</DebugType>
         <DocumentationFile />
+		<Optimize>True</Optimize>
+		<NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
 </Project>

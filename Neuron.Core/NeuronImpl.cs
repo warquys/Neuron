@@ -14,6 +14,7 @@ using Neuron.Core.Platform;
 using Neuron.Core.Plugins;
 using Neuron.Core.Scheduling;
 using Ninject;
+using Ninject.Planning.Bindings.Resolvers;
 
 namespace Neuron.Core
 {
@@ -36,7 +37,14 @@ namespace Neuron.Core
             }
             Kernel.BindSimple<NeuronBase>(this);
             Kernel.BindSimple(Configuration);
-            
+
+            if (!Platform.Configuration.NinjectGenerateDefaultBindings)
+            {
+                Kernel.Components.Remove<IMissingBindingResolver, SelfBindingResolver>();
+                Kernel.Components.Add<IMissingBindingResolver, NullableBindingResolver>();
+                Kernel.Settings.AllowNullInjection = true;
+            }
+
             if (Platform.Configuration.OverrideConsoleEncoding) Console.OutputEncoding = Encoding.UTF8;
             if (Platform.Configuration.FileIo)
             {
@@ -61,6 +69,7 @@ namespace Neuron.Core
             if (Platform.Configuration.FileIo) LoadIoModules();
             
             Platform.Enable();
+            modules.ActivateModules();
             modules.EnableAll();
 
             if (Platform.Configuration.FileIo) LoadIoPlugins();
@@ -80,7 +89,6 @@ namespace Neuron.Core
 
             var assemblies = Kernel.Get<AssemblyManager>();
             var moduleManager = Kernel.Get<ModuleManager>();
-            var pluginManager = Kernel.Get<PluginManager>();
             assemblies.SetupManager();
             
             foreach (var file in Directory.GetFiles(dependenciesDirectory, "*.dll"))
@@ -115,9 +123,7 @@ namespace Neuron.Core
                     error.Exception = e;
                     _logger.Framework(error);
                 }
-            }
-            
-            moduleManager.ActivateModules();
+            }   
         }
 
         public void LoadIoPlugins()
@@ -149,7 +155,7 @@ namespace Neuron.Core
                 }
             }
         }
-        
+
         public override void Stop()
         {
             Kernel.Get<PluginManager>().UnloadAll();

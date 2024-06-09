@@ -7,6 +7,8 @@ namespace Neuron.Core.Modules;
 
 public abstract class Module : InjectedLoggerBase
 {
+    public ModuleLoadContext SelfContext { get; internal set; }
+
     public virtual void Load(IKernel kernel) { }
     public virtual void Enable() { }
     public virtual void LateEnable() { }
@@ -14,7 +16,7 @@ public abstract class Module : InjectedLoggerBase
 }
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ModuleAttribute : MetaAttributeBase
+public class ModuleAttribute : MetaAttributeBase, ILoadableAttributeContext
 {
     public string Name { get; set; } = "Unnamed Module";
     public string Description { get; set; } = "no description provided";
