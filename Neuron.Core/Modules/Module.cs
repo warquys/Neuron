@@ -7,7 +7,7 @@ namespace Neuron.Core.Modules;
 
 public abstract class Module : InjectedLoggerBase
 {
-    public ModuleContext SelfContext { get; internal set; }
+    public ModuleLoadContext SelfContext { get; internal set; }
 
     public virtual void Load(IKernel kernel) { }
     public virtual void Enable() { }

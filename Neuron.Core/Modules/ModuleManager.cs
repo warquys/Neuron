@@ -21,10 +21,10 @@ public class ModuleManager
     private NeuronLogger _neuronLogger;
     private ILogger _logger;
 
-    private List<ModuleContext> _moduleBuffer;
-    private List<ModuleContext> _activeModules;
+    private List<ModuleLoadContext> _moduleBuffer;
+    private List<ModuleLoadContext> _activeModules;
 
-    private ReadOnlyCollection<ModuleContext> _activeModuleProxy;
+    private ReadOnlyCollection<ModuleLoadContext> _activeModuleProxy;
 
     public bool IsLocked { get; private set; } = false;
 
@@ -38,8 +38,8 @@ public class ModuleManager
         _neuronLogger = neuronLogger;
         _kernel = kernel;
         _serviceManager = serviceManager;
-        _moduleBuffer = new List<ModuleContext>();
-        _activeModules = new List<ModuleContext>();
+        _moduleBuffer = new List<ModuleLoadContext>();
+        _activeModules = new List<ModuleLoadContext>();
         _activeModuleProxy = _activeModules.AsReadOnly();
         _logger = _neuronLogger.GetLogger<ModuleManager>();
     }
@@ -47,12 +47,12 @@ public class ModuleManager
     public bool HasModule(string name)
         => _activeModules.Any(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
-    public ModuleContext Get(string name) 
+    public ModuleLoadContext Get(string name) 
         => _activeModules.FirstOrDefault(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
-    public IEnumerable<ModuleContext> GetAllModules() => _activeModuleProxy;
+    public IEnumerable<ModuleLoadContext> GetAllModules() => _activeModuleProxy;
 
-    public ModuleContext LoadModule(IEnumerable<Type> types)
+    public ModuleLoadContext LoadModule(IEnumerable<Type> types)
     {
         if (IsLocked)
             throw new InvalidOperationException("Cannot load module after the activation.");
@@ -69,7 +69,7 @@ public class ModuleManager
         var first = moduleAttributes.FirstOrDefault();
         var instance = first.meta.New();
 
-        var context = new ModuleContext()
+        var context = new ModuleLoadContext()
         {
             Attribute = first.attribute,
             Batch = batch,
@@ -85,7 +85,7 @@ public class ModuleManager
     public void ActivateModules()
     {
         IsLocked = true;
-        var moduleResolver = new CyclicDependencyResolver<ModuleContext>();
+        var moduleResolver = new CyclicDependencyResolver<ModuleLoadContext>();
         moduleResolver.AddDependables(_activeModules);
         moduleResolver.AddDependencies(_moduleBuffer);
         var moduleResult = moduleResolver.Resolve();
@@ -343,5 +343,5 @@ internal class ModulePropertyDependencyHolder : SimpleDependencyHolderBase
 
 public class ModuleLoadEvent : IEvent
 {
-    public ModuleContext Context { get; set; }
+    public ModuleLoadContext Context { get; set; }
 }

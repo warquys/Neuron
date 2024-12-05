@@ -40,7 +40,7 @@ namespace Neuron.Tests.Commands
             Test1(service, service.CreateHashedCommandReactor());
         }
 
-        public void Test1(CommandService service, CommandReactor reactor)
+        private void Test1(CommandService service, CommandReactor reactor)
         {
             reactor.RegisterCommand<ExampleCommand>();
             var result = reactor.Invoke(DefaultCommandContext.Of("Example"));
@@ -84,7 +84,7 @@ namespace Neuron.Tests.Commands
             Test2(service, service.CreateHashedCommandReactor());
         }
         
-        public void Test2(CommandService service, CommandReactor reactor)
+        private void Test2(CommandService service, CommandReactor reactor)
         {
             service.GlobalHandler.RegisterCommand<ExampleCommand>();
             var result = reactor.Invoke(DefaultCommandContext.Of("Example"));

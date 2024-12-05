@@ -1,12 +1,9 @@
-﻿using Ninject.Activation.Providers;
+﻿using System;
+using System.Collections.Generic;
 using Ninject.Activation;
 using Ninject.Components;
-using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Bindings.Resolvers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Neuron.Core;
 
@@ -42,12 +39,12 @@ public class NullableBindingResolver : NinjectComponent, IMissingBindingResolver
     /// <returns>
     /// The series of matching bindings.
     /// </returns>
-    public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+    public ICollection<IBinding> Resolve(IDictionary<Type, ICollection<IBinding>> bindings, IRequest request)
     {
         var service = request.Service;
         if (!TypeIsSelfBindable(service))
         {
-            return Enumerable.Empty<IBinding>();
+            return Array.Empty<IBinding>();
         }
 
         var provider = new NullProvider(service);

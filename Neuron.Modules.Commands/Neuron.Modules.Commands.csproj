@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Library</OutputType>
         <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU</Platforms>
@@ -10,12 +10,11 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
-    <Import Project="../Neuron.props"/>
+    <Import Project="../Neuron.props" />
 
     <ItemGroup>
-        <PackageReference Include="Ninject" Version="3.3.6" />
-        <PackageReference Include="SYML" Version="1.0.2" />
-        <PackageReference Include="YamlDotNet" Version="11.2.1" />
+        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+        <PackageReference Include="YamlDotNet" Version="16.2.0" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -34,9 +33,11 @@
         <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-
-    </PropertyGroup>
+	<ItemGroup>
+	  <Reference Include="SYML">
+	    <HintPath>..\Ref\SYML.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 
 </Project>
  

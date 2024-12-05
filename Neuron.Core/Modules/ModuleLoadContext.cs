@@ -6,7 +6,7 @@ using Neuron.Core.Meta;
 
 namespace Neuron.Core.Modules;
 
-public class ModuleContext : SimpleDependencyHolderBase, ILoadingContext
+public class ModuleLoadContext : SimpleDependencyHolderBase, ILoadingContext
 {
     public Assembly Assembly { get; set; }
     public MetaBatchReference Batch { get; set; }

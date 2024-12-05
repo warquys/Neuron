@@ -46,7 +46,7 @@ public class MetaManager
     /// Generates bindings for specified types using the <see cref="MetaGenerateBindings"/> event.
     /// Bindings are intermediate data-holders which are later used by the framework or modules,
     /// and are publicly available if related with an module. Can be retrieved via <see cref="Modules.ModuleManager"/>
-    /// as a property of <see cref="Modules.ModuleContext"/>.
+    /// as a property of <see cref="Modules.ModuleLoadContext"/>.
     /// </summary>
     public List<IMetaBinding> GenerateBindings(List<MetaType> types)
     {

@@ -18,10 +18,12 @@ public class HashedCommandHandler : ICommandHandler
 
     public readonly bool overrideName;
 
+    /// <param name="kernel" />
+    /// <param name="neuronLogger" />
     /// <param name="overrideName">
     /// if <see langword="true"/> a register command with a same name than a other other command allready register
     /// will replace the last register. 
-    /// <br>else a <see cref="ModuleOrPluginConflicException"/> get throw </br> 
+    /// <br>else a <see cref="ModuleOrPluginConflictException"/> get throw </br> 
     /// </param>
     public HashedCommandHandler(IKernel kernel, NeuronLogger neuronLogger, bool overrideName = false)
     {
@@ -109,7 +111,7 @@ public class HashedCommandHandler : ICommandHandler
         command.Meta = meta;
 
         if (!overrideName && _nameToCommands.ContainsKey(meta.CommandName))
-            throw ModuleOrPluginConflicException.Build(_nameToCommands[meta.CommandName], command,
+            throw ModuleOrPluginConflictException.Build(_nameToCommands[meta.CommandName], command,
                 "it is not possible to register two commands with the same name");
 
         _nameToCommands[meta.CommandName] = command;

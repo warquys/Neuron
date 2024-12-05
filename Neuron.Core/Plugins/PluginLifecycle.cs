@@ -9,10 +9,10 @@ namespace Neuron.Core.Plugins
     public class PluginLifecycle : ILifeCycle
     {
 
-        private PluginContext _plugin;
+        private PluginLoadContext _plugin;
         private ILogger _logger;
 
-        public PluginLifecycle(PluginContext plugin, ILogger logger)
+        public PluginLifecycle(PluginLoadContext plugin, ILogger logger)
         {
             _plugin = plugin;
             _logger = logger;

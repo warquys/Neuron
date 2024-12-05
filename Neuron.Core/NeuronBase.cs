@@ -18,7 +18,7 @@ namespace Neuron.Core
         {
             var settings = new NinjectSettings
             {
-                InjectNonPublic = true
+                
             };
 
             Platform = platform;

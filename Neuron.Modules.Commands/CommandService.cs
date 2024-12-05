@@ -36,17 +36,18 @@ public class CommandService : Service
         => CreateCommandReactor(new CommandHandler(_kernel, _neuronLogger));
 
     /// <summary>
-    /// Create a new <see cref="CommandReactor"/> using the cached command handler (<see cref="CachedCommandHandler"/>).
+    /// Create a new <see cref="CommandReactor"/> using the cached command handler (<see cref="HashedCommandHandler"/>).
     /// And bind the <see cref="CommandReactor"/> to the <see cref="GlobalCommandReactor"/>.
     /// <br>Note: </br>
     /// <remarks>
     /// <b>Note:</b>
     ///  Cannot manage two commands with the same name
     /// </remarks>
+    /// </summary>
     /// <param name="overrideName">
     /// if <see langword="true"/> a register command with a same name than a other other command allready register
     /// will replace the last register. 
-    /// <br>else a <see cref="SCPSunrise.Excepetion.ModuleOrPluginConflicException"/> get throw </br> 
+    /// <br>else a <see cref="Core.ModuleOrPluginConflictException"/> get throw </br> 
     /// </param>
     public CommandReactor CreateHashedCommandReactor(bool overrideName = false)
         => CreateCommandReactor(new HashedCommandHandler(_kernel, _neuronLogger, overrideName));

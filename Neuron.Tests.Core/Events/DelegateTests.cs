@@ -33,7 +33,7 @@ public class DelegateTests : IClassFixture<EventSetup>
         Assert.Equal(text, ArgsText);
     }
 
-    public void HandleEvent(ExampleEvent args)
+    private void HandleEvent(ExampleEvent args)
     {
         Called = true;
         ArgsText = args.Text;

@@ -22,61 +22,61 @@ public class IndefiniteExtensionPointException: Exception
 }
 
 [Serializable]
-public class ModuleOrPluginConflicException : Exception
+public class ModuleOrPluginConflictException : Exception
 {
     private static readonly ModuleManager _module;
     private static readonly PluginManager _plugin;
 
-    public ILoadingContext Conflic1 { get; }
-    public ILoadingContext Conflic2 { get; }
+    public ILoadingContext Conflict1 { get; }
+    public ILoadingContext Conflict2 { get; }
 
-    static ModuleOrPluginConflicException()
+    static ModuleOrPluginConflictException()
     {
         _module = Globals.Kernel.Get<ModuleManager>();
         _plugin = Globals.Kernel.Get<PluginManager>();
     }
 
-    public ModuleOrPluginConflicException() 
+    public ModuleOrPluginConflictException() 
     {
-        Conflic1 = new UnknowContext(null);
-        Conflic2 = new UnknowContext(null);
+        Conflict1 = new UnknowContext(null);
+        Conflict2 = new UnknowContext(null);
     }
 
-    public ModuleOrPluginConflicException(string message, ILoadingContext conflic1, ILoadingContext conflic2) : base(message)
+    public ModuleOrPluginConflictException(string message, ILoadingContext conflict1, ILoadingContext conflict2) : base(message)
     {
-        Conflic1 = conflic1;
-        Conflic2 = conflic2;
+        Conflict1 = conflict1;
+        Conflict2 = conflict2;
     }
 
-    public ModuleOrPluginConflicException(string message, ILoadingContext conflic1, ILoadingContext conflic2, Exception inner) : base(message, inner)
+    public ModuleOrPluginConflictException(string message, ILoadingContext conflict1, ILoadingContext conflict2, Exception inner) : base(message, inner)
     {
-        Conflic1 = conflic1;
-        Conflic2 = conflic2;
+        Conflict1 = conflict1;
+        Conflict2 = conflict2;
     }
 
-    protected ModuleOrPluginConflicException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    protected ModuleOrPluginConflictException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
-    public static ModuleOrPluginConflicException Build(object conflic1, object conflic2, string message)
-        => Build(conflic1.GetType(), conflic2.GetType(), message);
+    public static ModuleOrPluginConflictException Build(object conflict1, object conflict2, string message)
+        => Build(conflict1.GetType(), conflict2.GetType(), message);
 
-    public static ModuleOrPluginConflicException Build(Type conflic1, Type conflic2, string message)
+    public static ModuleOrPluginConflictException Build(Type conflict1, Type conflict2, string message)
     {
         ILoadingContext context1;
         ILoadingContext context2;
 
-        context1 = _plugin.Plugins.Find(p => p.Assembly == conflic1.Assembly);
+        context1 = _plugin.Plugins.Find(p => p.Assembly == conflict1.Assembly);
         if (context1 == null)
-            context1 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflic1.Assembly);
+            context1 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflict1.Assembly);
         if (context1 == null)
-            context1 = new UnknowContext(conflic1.Assembly);
+            context1 = new UnknowContext(conflict1.Assembly);
 
-        context2 = _plugin.Plugins.Find(p => p.Assembly == conflic2.Assembly);
+        context2 = _plugin.Plugins.Find(p => p.Assembly == conflict2.Assembly);
         if (context2 == null)
-            context2 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflic2.Assembly);
+            context2 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflict2.Assembly);
         if (context2 == null)
-            context2 = new UnknowContext(conflic2.Assembly);
+            context2 = new UnknowContext(conflict2.Assembly);
 
-        return new ModuleOrPluginConflicException(message, context1, context2);
+        return new ModuleOrPluginConflictException(message, context1, context2);
     }
 
 

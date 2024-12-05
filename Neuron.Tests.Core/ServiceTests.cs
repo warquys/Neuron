@@ -33,11 +33,11 @@ namespace Neuron.Tests.Core
             var serviceManager = new ServiceManager(kernel, metaManager);
             var batch = metaManager.Analyze(new[] {typeof(ExampleService)});
             
-            Assert.Equal(0, kernel.GetBindings(typeof(ExampleService)).ToArray().Length);
-            Assert.Equal(0, serviceManager.Services.Count);
+            Assert.Empty(kernel.GetBindings(typeof(ExampleService)).ToArray());
+            Assert.Empty(serviceManager.Services);
             var processed = batch.GenerateBindings();
-            Assert.Equal(0, kernel.GetBindings(typeof(ExampleService)).ToArray().Length);
-            Assert.Equal(0, serviceManager.Services.Count);
+            Assert.Empty(kernel.GetBindings(typeof(ExampleService)).ToArray());
+            Assert.Empty(serviceManager.Services);
             foreach (var o in processed)
             {
                 if (o is ServiceRegistration registration)
@@ -46,8 +46,8 @@ namespace Neuron.Tests.Core
                 }
             }
             Assert.NotNull(kernel.Get<ExampleService>());
-            Assert.Equal(1, kernel.GetBindings(typeof(ExampleService)).ToArray().Length);
-            Assert.Equal(1, serviceManager.Services.Count);
+            Assert.Single(kernel.GetBindings(typeof(ExampleService)).ToArray());
+            Assert.Single(serviceManager.Services);
             
             Assert.False(ExampleService.IsEnabled);
             foreach (var service in processed.OfType<ServiceRegistration>())

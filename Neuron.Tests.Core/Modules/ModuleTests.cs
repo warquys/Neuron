@@ -59,16 +59,16 @@ public class ModuleTests
         Assert.NotNull(serviceB.A);
         Assert.NotNull(serviceB.ServiceA);
             
-        Assert.Equal(1, kernel.GetBindings(typeof(ServiceA)).Count());
-        Assert.Equal(1, kernel.GetBindings(typeof(ServiceB)).Count());
-        Assert.Equal(1, kernel.GetBindings(typeof(ModuleA)).Count());
-        Assert.Equal(1, kernel.GetBindings(typeof(ModuleB)).Count());
+        Assert.Single(kernel.GetBindings(typeof(ServiceA)));
+        Assert.Single(kernel.GetBindings(typeof(ServiceB)));
+        Assert.Single(kernel.GetBindings(typeof(ModuleA)));
+        Assert.Single(kernel.GetBindings(typeof(ModuleB)));
             
         moduleManager.DisableAll();
             
-        Assert.Equal(0, kernel.GetBindings(typeof(ServiceA)).Count());
-        Assert.Equal(0, kernel.GetBindings(typeof(ServiceB)).Count());
-        Assert.Equal(0, kernel.GetBindings(typeof(ModuleA)).Count());
-        Assert.Equal(0, kernel.GetBindings(typeof(ModuleB)).Count());
+        Assert.Empty(kernel.GetBindings(typeof(ServiceA)));
+        Assert.Empty(kernel.GetBindings(typeof(ServiceB)));
+        Assert.Empty(kernel.GetBindings(typeof(ModuleA)));
+        Assert.Empty(kernel.GetBindings(typeof(ModuleB)));
     }
 }

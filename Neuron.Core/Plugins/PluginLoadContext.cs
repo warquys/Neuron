@@ -5,7 +5,7 @@ using Neuron.Core.Meta;
 
 namespace Neuron.Core.Plugins;
 
-public class PluginContext : ILoadingContext
+public class PluginLoadContext : ILoadingContext
 {
     public Assembly Assembly { get; set; }
     public MetaBatchReference Batch { get; set; }

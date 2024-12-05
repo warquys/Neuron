@@ -8,10 +8,10 @@ namespace Neuron.Core.Modules
     public class ModuleLifecycle : ILifeCycle
     {
 
-        private ModuleContext _module;
+        private ModuleLoadContext _module;
         private ILogger _logger;
 
-        public ModuleLifecycle(ModuleContext module, ILogger logger)
+        public ModuleLifecycle(ModuleLoadContext module, ILogger logger)
         {
             _module = module;
             _logger = logger;
