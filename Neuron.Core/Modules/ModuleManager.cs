@@ -21,8 +21,8 @@ public class ModuleManager
     private NeuronLogger _neuronLogger;
     private ILogger _logger;
 
-    private List<ModuleContext> _moduleBuffer;
-    private List<ModuleContext> _activeModules;
+    private List<ModuleLoadContext> _moduleBuffer;
+    private List<ModuleLoadContext> _activeModules;
 
     private ReadOnlyCollection<ModuleLoadContext> _activeModuleProxy;
 
@@ -47,12 +47,12 @@ public class ModuleManager
     public bool HasModule(string name)
         => _activeModules.Any(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
-    public ModuleContext Get(string name) 
+    public ModuleLoadContext Get(string name) 
         => _activeModules.FirstOrDefault(x => String.Equals(name, x.Attribute.Name, StringComparison.OrdinalIgnoreCase));
 
     public IEnumerable<ModuleLoadContext> GetAllModules() => _activeModuleProxy;
 
-    public ModuleContext LoadModule(IEnumerable<Type> types)
+    public ModuleLoadContext LoadModule(IEnumerable<Type> types)
     {
         if (IsLocked)
             throw new InvalidOperationException("Cannot load module after the activation.");
@@ -69,7 +69,7 @@ public class ModuleManager
         var first = moduleAttributes.FirstOrDefault();
         var instance = first.meta.New();
 
-        var context = new ModuleContext()
+        var context = new ModuleLoadContext()
         {
             Attribute = first.attribute,
             Batch = batch,
@@ -343,5 +343,5 @@ internal class ModulePropertyDependencyHolder : SimpleDependencyHolderBase
 
 public class ModuleLoadEvent : IEvent
 {
-    public ModuleContext Context { get; set; }
+    public ModuleLoadContext Context { get; set; }
 }

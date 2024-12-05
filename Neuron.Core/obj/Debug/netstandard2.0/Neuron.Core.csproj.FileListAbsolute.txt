@@ -26,3 +26,4 @@ F:\Dev\CSharp\godot\SCP Sunrise\Neuron\Neuron.Core\obj\Debug\netstandard2.0\Neur
 F:\Dev\CSharp\godot\SCP Sunrise\Neuron\Neuron.Core\obj\Debug\netstandard2.0\Neuron.Core.dll
 F:\Dev\CSharp\godot\SCP Sunrise\Neuron\Neuron.Core\obj\Debug\netstandard2.0\Neuron.Core.sourcelink.json
 F:\Dev\CSharp\godot\SCP Sunrise\Neuron\Neuron.Core\obj\Debug\netstandard2.0\Neuron.C.BFBC85D3.Up2Date
+F:\Dev\CSharp\Godot\SCP Sunrise\Neuron\Neuron.Core\bin\Debug\netstandard2.0\System.Diagnostics.DiagnosticSource.dll

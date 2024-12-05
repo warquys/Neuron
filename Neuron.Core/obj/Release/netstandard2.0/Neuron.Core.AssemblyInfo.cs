@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AnomalousCoders")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.5")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0.5+4e8302e483e5096d02fb6b34cd22db105dc551ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0.5+7b4c5c9b99a2ec9d752bcf2429647c99c1f3e06b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Neuron.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Neuron.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.5")]

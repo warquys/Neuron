@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using Ninject.Activation.Providers;
 using Ninject.Activation;
 using Ninject.Components;
-using Ninject.Infrastructure;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Bindings.Resolvers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Neuron.Core;
 
