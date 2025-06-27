@@ -1,43 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-        <LangVersion>10.0</LangVersion>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <OutputType>Library</OutputType>
-        <Configurations>Debug;Release</Configurations>
-        <Platforms>AnyCPU</Platforms>
-        <RootNamespace>Neuron.Tests.Core</RootNamespace>
-        <PackageId>NeuronModding.Tests.Core</PackageId>
-    </PropertyGroup>
+		<LangVersion>10.0</LangVersion>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<OutputType>Library</OutputType>
+		<Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU</Platforms>
+		<RootNamespace>Neuron.Tests.Core</RootNamespace>
+		<PackageId>NeuronModding.Tests.Core</PackageId>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="xunit" Version="2.9.2" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+	<PropertyGroup>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+		<PackageReference Include="xunit" Version="2.9.2" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <DebugType>Portable</DebugType>
-        <NoWarn>CS1591</NoWarn>
+	<ItemGroup>
+		<ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DebugType>Portable</DebugType>
+		<NoWarn>CS1591</NoWarn>
 		<DocumentationFile />
 	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 
-    </PropertyGroup>
+	</PropertyGroup>
 
 </Project>

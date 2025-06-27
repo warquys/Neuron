@@ -1,44 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Library</OutputType>
-        <Configurations>Debug;Release</Configurations>
-        <Platforms>AnyCPU</Platforms>
-        <RootNamespace>Neuron.Modules.Commands</RootNamespace>
-        <PackageId>NeuronModding.Modules.Commands</PackageId>
+		<Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU</Platforms>
+		<RootNamespace>Neuron.Modules.Commands</RootNamespace>
+		<PackageId>NeuronModding.Modules.Commands</PackageId>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
-    <Import Project="../Neuron.props" />
+	<Import Project="../Neuron.props" />
 
-    <ItemGroup>
-        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
-        <PackageReference Include="YamlDotNet" Version="16.2.0" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+		<PackageReference Include="YamlDotNet" Version="16.2.0" />
+	</ItemGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DebugType>Portable</DebugType>
 		<Optimize>True</Optimize>
 		<NoWarn>CS1591</NoWarn>
 		<DocumentationFile />
-    </PropertyGroup>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
-        <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
-    </ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="SYML">
-	    <HintPath>..\Ref\SYML.dll</HintPath>
-	  </Reference>
+		<ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
 	</ItemGroup>
 
-</Project>
- 
+	<ItemGroup>
+		<Reference Include="SYML">
+			<HintPath>..\Ref\SYML.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+</Project> 

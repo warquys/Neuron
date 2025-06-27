@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Library</OutputType>
-        <Configurations>Debug;Release</Configurations>
-        <Platforms>AnyCPU</Platforms>
-        <RootNamespace>Neuron.Modules.Configs</RootNamespace>
-        <PackageId>NeuronModding.Modules.Configs</PackageId>
-    </PropertyGroup>
+		<Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU</Platforms>
+		<RootNamespace>Neuron.Modules.Configs</RootNamespace>
+		<PackageId>NeuronModding.Modules.Configs</PackageId>
+	</PropertyGroup>
 
-    <Import Project="../Neuron.props" />
-    
-    <ItemGroup>
-        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
-        <PackageReference Include="YamlDotNet" Version="16.2.0" />
-    </ItemGroup>
+	<Import Project="../Neuron.props" />
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+	<ItemGroup>
+		<PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+		<PackageReference Include="YamlDotNet" Version="16.2.0" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DebugType>Portable</DebugType>
@@ -30,13 +30,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-        <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
-    </ItemGroup>
+		<ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
+	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="SYML">
-	    <HintPath>..\Ref\SYML.dll</HintPath>
-	  </Reference>
+		<Reference Include="SYML">
+			<HintPath>..\Ref\SYML.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 </Project>

@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Library</OutputType>
-        <Configurations>Debug;Release</Configurations>
-        <Platforms>AnyCPU</Platforms>
-        <RootNamespace>Neuron.Modules.Patcher</RootNamespace>
-        <PackageId>NeuronModding.Modules.Patcher</PackageId>
-    </PropertyGroup>
+		<Configurations>Debug;Release</Configurations>
+		<Platforms>AnyCPU</Platforms>
+		<RootNamespace>Neuron.Modules.Patcher</RootNamespace>
+		<PackageId>NeuronModding.Modules.Patcher</PackageId>
+	</PropertyGroup>
 
-    <Import Project="../Neuron.props" />
-    
-    <ItemGroup>
-        <PackageReference Include="Lib.Harmony" Version="2.3.3" />
-        <PackageReference Include="Ninject" Version="4.0.0-beta.1" />
-        <PackageReference Include="YamlDotNet" Version="16.2.0" />
-    </ItemGroup>
+	<Import Project="../Neuron.props" />
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+	<ItemGroup>
+		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
+		<PackageReference Include="Ninject" Version="4.0.0-beta.1" />
+		<PackageReference Include="YamlDotNet" Version="16.2.0" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<DebugType>Portable</DebugType>
@@ -26,18 +26,18 @@
 		<DocumentationFile />
 	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-      <DebugType>embedded</DebugType>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="SYML">
-        <HintPath>..\Ref\SYML.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+	<ItemGroup>
+		<Reference Include="SYML">
+			<HintPath>..\Ref\SYML.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 </Project>
