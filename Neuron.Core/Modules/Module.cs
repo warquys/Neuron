@@ -5,7 +5,7 @@ using Ninject;
 
 namespace Neuron.Core.Modules;
 
-public abstract class Module : InjectedLoggerBase
+public abstract class Module : InjectedLoggerBase, IMetaObject
 {
     public ModuleLoadContext SelfContext { get; internal set; }
 
