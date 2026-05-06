@@ -24,6 +24,7 @@ public class LoopingCoroutineReactor : CoroutineReactor
     public void Start()
     {
         Running = true;
+        MainThreadId = Thread.CurrentThread.ManagedThreadId;
         while (Running)
         {
             var befforCall = DateTime.Now;
