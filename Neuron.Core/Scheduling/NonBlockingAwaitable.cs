@@ -39,7 +39,12 @@ public class NonBlockingAwaitable
         return new NonBlockingAwaiter(this);
     }
 
-    public bool TrySetResult()
+    public async Task AsTask()
+    {
+        await this;
+    }
+
+    internal bool TrySetResult()
     {
         if (Interlocked.CompareExchange(ref _isCompleted, 1, 0) != 0)
             return false;
@@ -49,7 +54,7 @@ public class NonBlockingAwaitable
         return true;
     }
 
-    public bool TrySetException(Exception exception)
+    internal bool TrySetException(Exception exception)
     {
         if (exception == null)
             throw new ArgumentNullException(nameof(exception));
@@ -62,7 +67,7 @@ public class NonBlockingAwaitable
         return true;
     }
 
-    public bool TrySetCanceled()
+    internal bool TrySetCanceled()
     {
         if (Interlocked.CompareExchange(ref _isCompleted, 1, 0) != 0)
             return false;
@@ -73,10 +78,6 @@ public class NonBlockingAwaitable
         return true;
     } 
     
-    public async Task AsTask()
-    {
-        await this;
-    }
     
     public struct NonBlockingAwaiter : INotifyCompletion
     {

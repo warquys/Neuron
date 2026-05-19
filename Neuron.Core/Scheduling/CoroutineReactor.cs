@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Neuron.Core.Logging;
 using System.Threading;
 using Neuron.Core.Logging.Diagnostics;
+using Neuron.Core.Logging.Processing;
 
 namespace Neuron.Core.Scheduling;
 
@@ -14,18 +15,17 @@ namespace Neuron.Core.Scheduling;
 public abstract class CoroutineReactor
 {
     public int MainThreadId { get; protected set; }
-
-    protected CoroutineReactor()
-    {
-        MainThreadId = Thread.CurrentThread.ManagedThreadId;
-    }
-
     public ILogger Logger { get; set; }
 
     protected List<CoroutineRegistration> _coroutines = new();
     protected ConcurrentQueue<CoroutineRegistration> _addCoroutines = new();
     protected ConcurrentQueue<CoroutineRegistration> _removeCoroutines = new();
 
+    protected CoroutineReactor()
+    {
+        MainThreadId = Thread.CurrentThread.ManagedThreadId;
+    }
+    
     /// <summary>
     /// Starts a new coroutine defined by the enumerator.
     /// </summary>
@@ -44,9 +44,10 @@ public abstract class CoroutineReactor
     /// <summary>
     /// Starts a new coroutine and returns a task completed when the coroutine finishes.
     /// </summary>
-    public NonBlockingAwaitable StartCoroutineAsync(IEnumerator<float> coroutine)
+    public NonBlockingAwaitable StartCoroutineAsync(IEnumerator<float> coroutine, out object handler)
     {
         var registration = (CoroutineRegistration)StartCoroutine(coroutine);
+        handler = registration;
         return registration.CompletionAwaitable = new NonBlockingAwaitable(MainThreadId);
     }
 
@@ -57,7 +58,15 @@ public abstract class CoroutineReactor
     public void StopCoroutine(object handle)
     {
         if (handle is not CoroutineRegistration registration)
-            throw new ArgumentException("Invalid coroutine handle", nameof(handle));
+        {
+            if (handle == null)
+                throw new ArgumentNullException(nameof(handle));
+            else
+                throw new ArgumentException("Invalid coroutine handle", nameof(handle));
+        }
+
+        if (registration.CompletionAwaitable != null && registration.CompletionAwaitable.IsCompleted)
+            return;
 
         registration.CompletionAwaitable ??= new NonBlockingAwaitable(MainThreadId);
         registration.CompletionAwaitable.TrySetCanceled();
@@ -70,7 +79,12 @@ public abstract class CoroutineReactor
     public NonBlockingAwaitable WaitEndAsync(object handle)
     {
         if (handle is not CoroutineRegistration registration)
-            throw new ArgumentException("Invalid coroutine handle", nameof(handle));
+        {
+            if (handle == null)
+                throw new ArgumentNullException(nameof(handle));
+            else
+                throw new ArgumentException("Invalid coroutine handle", nameof(handle));
+        }
 
         registration.CompletionAwaitable ??= new NonBlockingAwaitable(MainThreadId);
         if (registration.Enumerator == null)
