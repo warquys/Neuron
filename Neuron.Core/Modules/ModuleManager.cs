@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using Neuron.Core.Dependencies;
 using Neuron.Core.Events;
 using Neuron.Core.Logging;
@@ -52,6 +53,26 @@ public class ModuleManager
 
     public IEnumerable<ModuleLoadContext> GetAllModules() => _activeModuleProxy;
 
+    /// <summary>
+    /// Register an assembly containing a module.
+    /// Can be only call before <see cref="ActivateModules()"/>, equivalent to check if <see cref="IsLocked"/> is set to <see langword="true"/>.
+    /// </summary>
+    /// <param name="assembly">The assembly containing a module and types that need to be parsed.</param>
+    /// <returns>Informations about the Module.</returns>
+    /// <exception cref="InvalidOperationException">If the <see cref="IsLocked"/> is set to <see langword="true"/>.</exception>
+    /// <exception cref="IndefiniteExtensionPointException">If other than one <paramref name="types"/> can be use as module entry point.</exception>
+
+    public ModuleLoadContext LoadModule(Assembly assembly)
+        => LoadModule(assembly.GetTypes());
+
+    /// <summary>
+    /// Register types to be analyze by Neuron and other Modules.
+    /// Can be only call before <see cref="ActivateModules()"/>, equivalent to check if <see cref="IsLocked"/> is set to <see langword="true"/>.
+    /// </summary>
+    /// <param name="types">All the types that will be analyze, generally the all assembly.</param>
+    /// <returns>Informations about the Module.</returns>
+    /// <exception cref="InvalidOperationException">If the <see cref="IsLocked"/> is set to <see langword="true"/>.</exception>
+    /// <exception cref="IndefiniteExtensionPointException">If other than one <paramref name="types"/> can be use as module entry point.</exception>
     public ModuleLoadContext LoadModule(IEnumerable<Type> types)
     {
         if (IsLocked)
@@ -84,6 +105,10 @@ public class ModuleManager
 
     public void ActivateModules()
     {
+        // for now lock, maybe in the future allow to load other module later
+        if (IsLocked)
+            throw new InvalidOperationException("Cannot activation after the first activation.");
+        
         IsLocked = true;
         var moduleResolver = new CyclicDependencyResolver<ModuleLoadContext>();
         moduleResolver.AddDependables(_activeModules);
@@ -291,6 +316,9 @@ public class ModuleManager
             // Save context reference
             _activeModules.Add(context);
         }
+
+        _moduleBuffer.Clear();
+        _moduleBuffer.TrimExcess();
     }
 
     public void EnableAll()

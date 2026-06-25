@@ -109,7 +109,7 @@ namespace Neuron.Core
             {
                 try
                 {
-                    var context = moduleManager.LoadModule(assembly.GetTypes());
+                    var context = moduleManager.LoadModule(assembly);
                     context.Assembly = assembly;
                 }
                 catch (Exception e)
