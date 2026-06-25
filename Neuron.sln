@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.6.33723.286
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11822.322 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Core", "Neuron.Core\Neuron.Core.csproj", "{2F17FA64-F5B9-43DE-9887-D221B2798CED}"
 EndProject
@@ -13,13 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Modules.Commands", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neuron.Tests.Commands", "Neuron.Tests.Commands\Neuron.Tests.Commands.csproj", "{38630A44-2CA2-4B7F-B4E1-219C1AADEA42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Core.Standalone", "Neuron.Core.Standalone\Neuron.Core.Standalone.csproj", "{7AF6BE34-EF21-42B5-A59F-A9027F6C0CA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neuron.Core.Standalone", "Neuron.Core.Standalone\Neuron.Core.Standalone.csproj", "{7AF6BE34-EF21-42B5-A59F-A9027F6C0CA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Modules.Configs", "Neuron.Modules.Configs\Neuron.Modules.Configs.csproj", "{1FFB9AB5-BEE4-4A9C-BDFA-A38066A769D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neuron.Modules.Configs", "Neuron.Modules.Configs\Neuron.Modules.Configs.csproj", "{1FFB9AB5-BEE4-4A9C-BDFA-A38066A769D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Tests.Configs", "Neuron.Tests.Configs\Neuron.Tests.Configs.csproj", "{CF98E637-DC5B-48A9-A131-B08D87D1F60A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neuron.Tests.Configs", "Neuron.Tests.Configs\Neuron.Tests.Configs.csproj", "{CF98E637-DC5B-48A9-A131-B08D87D1F60A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-9A1E7A4F7556}") = "Neuron.Modules.Reload", "Neuron.Modules.Reload\Neuron.Modules.Reload.csproj", "{B477E117-27E3-47E1-989D-D74B2D09DD76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neuron.Modules.Reload", "Neuron.Modules.Reload\Neuron.Modules.Reload.csproj", "{B477E117-27E3-47E1-989D-D74B2D09DD76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syml", "Syml\Syml\Syml.csproj", "{7FD2F6EF-6168-992E-E158-F5D64AA5770B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,14 +65,15 @@ Global
 		{B477E117-27E3-47E1-989D-D74B2D09DD76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B477E117-27E3-47E1-989D-D74B2D09DD76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B477E117-27E3-47E1-989D-D74B2D09DD76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD2F6EF-6168-992E-E158-F5D64AA5770B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD2F6EF-6168-992E-E158-F5D64AA5770B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD2F6EF-6168-992E-E158-F5D64AA5770B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD2F6EF-6168-992E-E158-F5D64AA5770B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC7015E3-DF22-4BB4-B112-D12E32E88BFE}
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

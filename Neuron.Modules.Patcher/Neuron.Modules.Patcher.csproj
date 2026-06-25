@@ -1,20 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU</Platforms>
 		<RootNamespace>Neuron.Modules.Patcher</RootNamespace>
 		<PackageId>NeuronModding.Modules.Patcher</PackageId>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
 	<Import Project="../Neuron.props" />
 
 	<ItemGroup>
-		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
+		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.9" />
 		<PackageReference Include="Ninject" Version="4.0.0-beta.1" />
-		<PackageReference Include="YamlDotNet" Version="16.2.0" />
+		<PackageReference Include="YamlDotNet" Version="18.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -32,12 +34,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Neuron.Core\Neuron.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="SYML">
-			<HintPath>..\Ref\SYML.dll</HintPath>
-		</Reference>
+		<ProjectReference Include="..\Syml\Syml\Syml.csproj" />
 	</ItemGroup>
 
 </Project>
