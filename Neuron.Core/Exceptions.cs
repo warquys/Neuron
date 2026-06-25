@@ -16,9 +16,6 @@ public class IndefiniteExtensionPointException: Exception
     public IndefiniteExtensionPointException() { }
     public IndefiniteExtensionPointException(string message) : base(message) { }
     public IndefiniteExtensionPointException(string message, Exception inner) : base(message, inner) { }
-    protected IndefiniteExtensionPointException(
-      SerializationInfo info,
-      StreamingContext context) : base(info, context) { }
 }
 
 [Serializable]
@@ -38,8 +35,8 @@ public class ModuleOrPluginConflictException : Exception
 
     public ModuleOrPluginConflictException() 
     {
-        Conflict1 = new UnknowContext(null);
-        Conflict2 = new UnknowContext(null);
+        Conflict1 = new UnknownContext(null);
+        Conflict2 = new UnknownContext(null);
     }
 
     public ModuleOrPluginConflictException(string message, ILoadingContext conflict1, ILoadingContext conflict2) : base(message)
@@ -54,8 +51,6 @@ public class ModuleOrPluginConflictException : Exception
         Conflict2 = conflict2;
     }
 
-    protected ModuleOrPluginConflictException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
     public static ModuleOrPluginConflictException Build(object conflict1, object conflict2, string message)
         => Build(conflict1.GetType(), conflict2.GetType(), message);
 
@@ -68,21 +63,21 @@ public class ModuleOrPluginConflictException : Exception
         if (context1 == null)
             context1 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflict1.Assembly);
         if (context1 == null)
-            context1 = new UnknowContext(conflict1.Assembly);
+            context1 = new UnknownContext(conflict1.Assembly);
 
         context2 = _plugin.Plugins.Find(p => p.Assembly == conflict2.Assembly);
         if (context2 == null)
             context2 = _module.GetAllModules().FirstOrDefault(p => p.Assembly == conflict2.Assembly);
         if (context2 == null)
-            context2 = new UnknowContext(conflict2.Assembly);
+            context2 = new UnknownContext(conflict2.Assembly);
 
         return new ModuleOrPluginConflictException(message, context1, context2);
     }
 
 
-    public class UnknowContext : ILoadingContext
+    public class UnknownContext : ILoadingContext
     {
-        public UnknowContext(Assembly assembly)
+        public UnknownContext(Assembly assembly)
         {
             Assembly = assembly;
         }
