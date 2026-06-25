@@ -11,12 +11,12 @@ public class ConfigBinding : IMetaBinding
     public Type Type { get; set; }
     public DocumentSectionAttribute Attribute { get; set; }
     public IDocumentSection Section { get; set; }
-    public IEnumerable<Type> PromisedServices => new[] { typeof(ConfigService) };
+    public IEnumerable<Type> PromisedServices => new[] { Type };
 }
 
 public class TranslationBinding : IMetaBinding
 {
     public Type Type { get; set; }
     public object Translations { get; set; }
-    public IEnumerable<Type> PromisedServices => new[] { typeof(TranslationService) };
+    public IEnumerable<Type> PromisedServices => new[] { Type };
 }
