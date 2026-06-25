@@ -1,13 +1,10 @@
-﻿using System;
-using System.IO;
-using Neuron.Core;
+﻿using Neuron.Core;
 using Neuron.Core.Logging;
 using Neuron.Core.Platform;
 using Neuron.Modules.Configs;
 using Ninject;
 using Syml;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Neuron.Tests.Configs
 {

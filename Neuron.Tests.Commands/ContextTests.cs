@@ -1,16 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Linq;
 using Neuron.Core;
 using Neuron.Core.Logging;
-using Neuron.Core.Meta;
-using Neuron.Core.Modules;
 using Neuron.Core.Platform;
 using Neuron.Modules.Commands;
 using Neuron.Modules.Commands.Command;
 using Ninject;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Neuron.Tests.Commands
 {

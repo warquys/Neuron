@@ -6,7 +6,6 @@ using Neuron.Modules.Configs;
 using Neuron.Modules.Configs.Localization;
 using Ninject;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Neuron.Tests.Configs
 {

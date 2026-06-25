@@ -32,7 +32,7 @@ public class CoroutineAsync
     public async Task CoroutineCompletesWhenAwaited()
     {
         var reactor = new LoopingCoroutineReactor();
-        Task runningReactor = Task.Run(reactor.Start);
+        Task runningReactor = Task.Run(reactor.Start, TestContext.Current.CancellationToken);
         var coroutine = reactor.StartCoroutineAsync(FiveSecondCoroutine(), out var handler);
         await coroutine;
     }
@@ -50,7 +50,7 @@ public class CoroutineAsync
     public async Task CancelledCoroutineThrowsOperationCanceledException()
     {
         var reactor = new LoopingCoroutineReactor();
-        Task runningReactor = Task.Run(reactor.Start);
+        Task runningReactor = Task.Run(reactor.Start, TestContext.Current.CancellationToken);
         var coroutine = reactor.StartCoroutineAsync(FiveSecondCoroutine(), out var handler);
         reactor.StopCoroutine(handler);
         await Assert.ThrowsAsync<OperationCanceledException>(async () => await coroutine);
@@ -60,9 +60,9 @@ public class CoroutineAsync
     public async Task CancelingAfterCompletionStillAllowsAwait()
     {
         var reactor = new LoopingCoroutineReactor();
-        Task runningReactor = Task.Run(reactor.Start);
+        Task runningReactor = Task.Run(reactor.Start, TestContext.Current.CancellationToken);
         var coroutine = reactor.StartCoroutineAsync(OneTickCoroutine(), out var handler);
-        await Task.Delay(1500);
+        await Task.Delay(1500, TestContext.Current.CancellationToken);
         reactor.StopCoroutine(handler);
         await coroutine;
     }
@@ -71,9 +71,9 @@ public class CoroutineAsync
     public async Task StoppingThrowingCoroutinePropagatesException()
     {
         var reactor = new LoopingCoroutineReactor();
-        Task runningReactor = Task.Run(reactor.Start);
+        Task runningReactor = Task.Run(reactor.Start, TestContext.Current.CancellationToken);
         var coroutine = reactor.StartCoroutineAsync(ThrowingCoroutine(), out var handler);
-        await Task.Delay(1500);
+        await Task.Delay(1500, TestContext.Current.CancellationToken);
         reactor.StopCoroutine(handler);
         await Assert.ThrowsAsync<TestException>(async () => await coroutine);
     }
@@ -82,7 +82,7 @@ public class CoroutineAsync
     public async Task ContinuationDoesNotResumeOnMainThread()
     {
         var reactor = new LoopingCoroutineReactor();
-        Task runningReactor = Task.Run(reactor.Start);
+        Task runningReactor = Task.Run(reactor.Start, TestContext.Current.CancellationToken);
 
         int continuationThreadId = await CaptureContinuationThreadId(
             reactor.StartCoroutineAsync(OneTickCoroutine(), out _));

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Neuron.Core;
-using Neuron.Core.Events;
 using Neuron.Core.Logging;
 using Neuron.Core.Meta;
 using Neuron.Core.Platform;
 using Ninject;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Neuron.Tests.Core
 {

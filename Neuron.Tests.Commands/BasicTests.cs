@@ -6,7 +6,6 @@ using Neuron.Modules.Commands.Command;
 using Neuron.Modules.Commands.Event;
 using Ninject;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Neuron.Tests.Commands
 {

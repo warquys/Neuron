@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Neuron.Core;
-using Neuron.Core.Dependencies;
+﻿using Neuron.Core;
 using Neuron.Core.Logging;
 using Neuron.Core.Meta;
 using Neuron.Core.Modules;
@@ -11,7 +8,6 @@ using Neuron.Modules.Configs.Localization;
 using Ninject;
 using Syml;
 using Xunit;
-using Xunit.Abstractions;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Neuron.Tests.Configs;

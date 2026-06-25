@@ -7,7 +7,6 @@ using Neuron.Core.Platform;
 using Neuron.Core.Plugins;
 using Ninject;
 using Xunit;
-using Xunit.Abstractions;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Neuron.Tests.Core.Plugins;
