@@ -1,6 +1,7 @@
 ﻿using System;
 using Neuron.Core.Logging;
 using Neuron.Core.Logging.Utils;
+using Neuron.Core.Modules;
 using Neuron.Core.Platform;
 using Ninject;
 
@@ -91,19 +92,19 @@ namespace Neuron.Core
         /// <summary>
         /// Creates a new debug instance of neuron. 
         /// </summary>
-        public static IPlatform DebugHook()
+        public static PlatformDebugImpl DebugHook(Action<ModuleManager> loadModules = null)
         {
-            var entrypoint = new PlatformDebugImpl();
+            var entrypoint = new PlatformDebugImpl(loadModules);
             entrypoint.Boostrap();
             return entrypoint;
         }
-        
+
         /// <summary>
         /// Creates a new debug instance of neuron with a log message sink.
         /// </summary>
-        public static IPlatform DebugHook(LogMessageConsumer logConsumer)
+        public static PlatformDebugImpl DebugHook(LogMessageConsumer logConsumer, Action<ModuleManager> loadModules = null)
         {
-            var entrypoint = new PlatformDebugImpl();
+            var entrypoint = new PlatformDebugImpl(loadModules);
             entrypoint.Configuration.LogEventSink = new StringEventSink(logConsumer);
             entrypoint.Boostrap();
             return entrypoint;

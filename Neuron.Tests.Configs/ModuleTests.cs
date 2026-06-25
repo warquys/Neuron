@@ -15,34 +15,30 @@ namespace Neuron.Tests.Configs;
 public class ModuleTests
 {
     private readonly ITestOutputHelper _output;
-    private readonly IPlatform _neuron;
 
     public ModuleTests(ITestOutputHelper output)
     {
         this._output = output;
-        _neuron = NeuronMinimal.DebugHook(output.WriteLine);
     }
 
     [Fact]
     public void TestBasicModuleSetup()
     {
-        var logger = _neuron.NeuronBase.Kernel.Get<NeuronLogger>();
-        var moduleManager = _neuron.NeuronBase.Kernel.Get<ModuleManager>();
-        //moduleManager.LoadModule(new []{typeof(ModuleC)});
-        moduleManager.LoadModule(new[] {typeof(ConfigsModule), typeof(TranslationService), typeof(ConfigService)});
-        var context = moduleManager.LoadModule(new []{typeof(ModuleA), typeof(ConfigA), typeof(TranslationsA)});
+        var neuron = NeuronMinimal.DebugHook(_output.WriteLine, (moduleManager) =>
+        {
+            Assert.False(moduleManager.IsLocked);
+            moduleManager.LoadModule(new[] { typeof(ConfigsModule), typeof(TranslationService), typeof(ConfigService) });
+            moduleManager.LoadModule(new[] { typeof(ModuleA), typeof(ConfigA), typeof(TranslationsA) });
+            Assert.False(moduleManager.IsLocked);
+        });
 
+        Assert.NotNull(neuron.NeuronBase.Kernel.Get<NeuronLogger>());
+        var moduleManager = neuron.NeuronBase.Kernel.Get<ModuleManager>();
         
-        
-        Assert.False(moduleManager.IsLocked);
-        moduleManager.ActivateModules();
         Assert.True(moduleManager.IsLocked);
-
-        
         moduleManager.EnableAll();
         Assert.True(ModuleA.IsValueRight);
         Assert.True(ModuleA.IsMessageRight);
-        
     }
 }
 
