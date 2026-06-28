@@ -31,6 +31,7 @@ public class ModuleA : Module
     }
 }
 
+[Automatic]
 public class ServiceA : Service
 {
     [Inject] public ServiceASub SubService { get; set; }
@@ -46,6 +47,7 @@ public class ServiceA : Service
     }
 }
 
+[Automatic]
 public class ServiceASub : Service
 {
     public override void Enable()
@@ -88,6 +90,7 @@ public class ModuleB : Module
     }
 }
 
+[Automatic]
 public class ServiceB : Service
 {
     [Inject] public ModuleA A { get; set; }

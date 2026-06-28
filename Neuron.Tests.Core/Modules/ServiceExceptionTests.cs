@@ -50,6 +50,7 @@ public class ModuleH : Module
 }
 
 
+[Automatic]
 public class ServiceH : Service
 {
     [Inject]

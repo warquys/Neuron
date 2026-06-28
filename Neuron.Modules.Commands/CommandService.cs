@@ -8,11 +8,11 @@ using Ninject;
 // ReSharper disable MemberCanBePrivate.Global
 namespace Neuron.Modules.Commands;
 
+[Automatic]
 public class CommandService : Service
 {
     private IKernel _kernel;
     private NeuronLogger _neuronLogger;
-    private ILogger _logger;
 
     public CommandHandler GlobalHandler => (CommandHandler)GlobalCommandReactor.Handler;
 
@@ -23,7 +23,6 @@ public class CommandService : Service
     {
         _kernel = kernel;
         _neuronLogger = neuronLogger;
-        _logger = _neuronLogger.GetLogger<CommandService>();
         GlobalCommandReactor = new CommandReactor(_kernel, _neuronLogger);
         CommandReactors = new List<CommandReactor>();
     }
@@ -45,7 +44,7 @@ public class CommandService : Service
     /// </remarks>
     /// </summary>
     /// <param name="overrideName">
-    /// if <see langword="true"/> a register command with a same name than a other other command allready register
+    /// if <see langword="true"/> a register command with a same name than a other command already register
     /// will replace the last register. 
     /// <br>else a <see cref="Core.ModuleOrPluginConflictException"/> get throw </br> 
     /// </param>

@@ -62,6 +62,7 @@ namespace Neuron.Tests.Core
         }
     }
 
+    [Automatic]
     public class ExampleService : Service
     {
         public static bool IsEnabled;

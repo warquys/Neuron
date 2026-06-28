@@ -11,12 +11,12 @@ using Ninject;
 
 namespace Neuron.Modules.Configs.Localization;
 
+[Automatic]
 public class TranslationService : Service
 {
     private ConfigService _configService;
     private NeuronBase _neuronBase;
     private NeuronLogger _neuronLogger;
-    private ILogger _logger;
     private IKernel _kernel;
     private ConfigsModule _module;
 
@@ -30,7 +30,6 @@ public class TranslationService : Service
         _neuronLogger = neuronLogger;
         _kernel = kernel;
         _module = module;
-        _logger = neuronLogger.GetLogger<TranslationService>();
     }
 
     public override void Enable()
@@ -65,7 +64,7 @@ public class TranslationService : Service
         binding.Translations = translations;
         _kernel.Unbind(binding.Type);
         _kernel.Bind(binding.Type).ToConstant(translations).InSingletonScope().ToString();
-        _logger.Verbose($"Bound translation file [Name] to [Type]", name, binding.Type);
+        Logger.Verbose($"Bound translation file [Name] to [Type]", name, binding.Type);
     }
 
     public override void Disable()

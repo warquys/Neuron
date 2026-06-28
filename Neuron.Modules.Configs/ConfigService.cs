@@ -11,13 +11,13 @@ using Syml;
 
 namespace Neuron.Modules.Configs;
 
+[Automatic]
 public class ConfigService : Service
 {
     private NeuronBase _neuronBase;
     private NeuronLogger _neuronLogger;
     private IKernel _kernel;
     private ConfigsModule _module;
-    private ILogger _logger;
 
     public ConfigService(NeuronBase neuronBase, NeuronLogger neuronLogger, IKernel kernel, ConfigsModule module)
     {
@@ -25,7 +25,6 @@ public class ConfigService : Service
         _neuronLogger = neuronLogger;
         _kernel = kernel;
         _module = module;
-        _logger = neuronLogger.GetLogger<ConfigService>();
     }
 
     public Dictionary<string, ConfigContainer> Documents = new();
@@ -58,8 +57,8 @@ public class ConfigService : Service
         var section = (IDocumentSection)container.Get(binding.Type);
         binding.Section = section;
         _kernel.Unbind(binding.Type);
-        _kernel.Bind(binding.Type).ToConstant(section).InSingletonScope().ToString();
-        _logger.Verbose("Bound config section [Section] with [Type]", section, binding.Type);
+        _kernel.Bind(binding.Type).ToConstant(section).InSingletonScope();
+        Logger.Verbose("Bound config section [Section] with [Type]", section, binding.Type);
     }
 
     public void ReloadModuleConfigs()
@@ -90,6 +89,6 @@ public class ConfigService : Service
 
     public override void Disable()
     {
-        
+        throw new NotImplementedException("");
     }
 }

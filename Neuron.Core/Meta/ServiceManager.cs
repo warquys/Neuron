@@ -10,7 +10,6 @@ namespace Neuron.Core.Meta;
 /// </summary>
 public class ServiceManager
 {
-
     private IKernel _kernel;
     private MetaManager _meta;
     public List<ServiceRegistration> Services { get; set; }
@@ -25,32 +24,52 @@ public class ServiceManager
 
     internal void MetaDelegate(MetaGenerateBindingsEvent args)
     {
-        if (args.MetaType.Is<Service>())
+        if (!args.MetaType.TryGetAttribute<AutomaticAttribute>(out _)) return;
+        if (!args.MetaType.Is<Service>()) return;
+
+        var serviceType = args.MetaType.Type;
+        if (args.MetaType.TryGetAttribute<ServiceInterfaceAttribute>(out var serviceInterface))
         {
-            var serviceType = args.MetaType.Type;
-            if (args.MetaType.TryGetAttribute<ServiceInterfaceAttribute>(out var serviceInterface))
-            {
-                serviceType = serviceInterface.ServiceType;
-            }
-            var obj = new ServiceRegistration()
-            {
-                MetaType = args.MetaType,
-                ServiceType = serviceType
-            };
-            args.Outputs.Add(obj);
+            serviceType = serviceInterface.ServiceType;
         }
+        var obj = new ServiceRegistration()
+        {
+            MetaType = args.MetaType,
+            ServiceType = serviceType
+        };
+        args.Outputs.Add(obj);
     }
 
-    
+
+    public ServiceRegistration RegisterService(Service service)
+    {
+        if (service == null)
+            throw new ArgumentNullException(nameof(service));
+
+        var metaType = MetaType.TryGetMetaType(service.GetType());
+        var serviceType = metaType.Type;
+        if (metaType.TryGetAttribute<ServiceInterfaceAttribute>(out var serviceInterface))
+        {
+            serviceType = serviceInterface.ServiceType;
+        }
+        var registration = new ServiceRegistration()
+        {
+            MetaType = metaType,
+            ServiceType = serviceType
+        };
+        _kernel.Bind(registration.ServiceType).ToConstant(service).InSingletonScope();
+        Services.Add(registration);
+        return registration;
+    }
+
     /// <summary>
     /// Binds the service registration to the ninject kernel and the local registry.
     /// </summary>
-    public ServiceRegistration BindService(ServiceRegistration registration)
+    public void BindService(ServiceRegistration service)
     {
-        _kernel.Bind(registration.ServiceType).To(registration.MetaType.Type).InSingletonScope();
-        _kernel.Get(registration.ServiceType);
-        Services.Add(registration);
-        return registration;
+        _kernel.Bind(service.ServiceType).To(service.MetaType.Type).InSingletonScope();
+        _kernel.Get(service.ServiceType);
+        Services.Add(service);
     }
 
     

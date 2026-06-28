@@ -5,6 +5,7 @@ using Neuron.Core.Meta;
 
 namespace Neuron.Modules.Patcher;
 
+[Automatic]
 public class PatcherService : Service
 {
     private PatcherModule _patcherModule;

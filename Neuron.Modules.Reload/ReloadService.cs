@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Neuron.Core.Events;
 using Neuron.Core.Meta;
-using Neuron.Core.Events;
 using Neuron.Modules.Configs;
 using Neuron.Modules.Configs.Localization;
 
 namespace Neuron.Modules.Reload
 {
+    [Automatic]
     public class ReloadService : Service
     {
         private readonly EventManager _eventManager;

@@ -96,5 +96,5 @@ namespace Neuron.Modules.Patcher
 public class PatchClassBinding : IMetaBinding
 {
     public Type Type { get; set; }
-    public IEnumerable<Type> PromisedServices => new[] { typeof(PatcherService) };
+    public IEnumerable<Type> PromisedServices => Array.Empty<Type>();
 }
