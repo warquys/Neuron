@@ -43,6 +43,13 @@ public class ConfigService : Service
         }
     }
 
+    public ConfigContainer GetContainerNoCaching(string path)
+    {
+        if (!path.EndsWith(".syml")) path += ".syml";
+        if (Documents.TryGetValue(path, out var container)) return container;
+        return new ConfigContainer(_neuronBase, _neuronLogger, path);
+    }
+
     public ConfigContainer GetContainer(string path)
     {
         if (!path.EndsWith(".syml")) path += ".syml";
